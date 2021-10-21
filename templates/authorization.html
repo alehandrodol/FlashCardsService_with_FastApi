@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Authorization</title>
+    <style>
+
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let btn = document.querySelector('input[type=submit]');
+            btn.addEventListener('click', async function (event) {
+                event.preventDefault()
+                let response = await fetch("/auth/jwt/login", {
+                    method: "POST",
+                    body: new FormData(document.querySelector("form"))
+                })
+                let body = document.querySelector("body");
+                body.style.display = "block";
+                if (response.status === 403){
+                    let wrong_div = document.querySelector("#WrongUser");
+                    wrong_div.style.display = "block";
+                }
+                if (response.status === 200){
+                    let html_response = await fetch("/user/me", {
+                        method: "GET",
+                        credentials: "include"
+                    })
+                }
+            })
+        });
+
+    </script>
+</head>
+<body>
+    <form method="POST" action="/login">
+        <input type="text" name="email" />
+        <input type="password" name="password" />
+        <input type="submit" value="Enter" />
+    </form>
+    <div id="WrongUser" style="display: none">
+        <p>Неправильный логин или пароль, попробуйте ещё раз.</p>
+    </div>
+</body>
+</html>

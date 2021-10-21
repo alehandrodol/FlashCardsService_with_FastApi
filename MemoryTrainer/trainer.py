@@ -1,7 +1,8 @@
 from typing import List
 from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
-from core.utils import get_db
+
+from User.models import User
+from User.main import fastapi_users
 from . import service
 from .schemas import CardCreate, CardList
 
@@ -9,12 +10,10 @@ router = APIRouter()
 
 
 @router.get("/", response_model=List[CardList])
-def make_card(db: Session = Depends(get_db)):
-    card = service.get_make_card(db)
-    return card
+async def make_card():
+    return await service.get_made_card()
 
 
 @router.post("/")
-def make_card(item: CardCreate, db: Session = Depends(get_db)):
-    card = service.create_card(db, item)
-    return card
+async def make_card(item: CardCreate, user: User = Depends(fastapi_users.current_user())):
+    return await service.create_card(item, user)

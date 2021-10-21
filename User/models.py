@@ -1,13 +1,18 @@
-from sqlalchemy import Integer, Column, String, DateTime
+from sqlalchemy import Column, String, Date
 from core.database import Base
+from fastapi_users.db import SQLAlchemyBaseUserTable, SQLAlchemyUserDatabase
+from core.database import database
+from .schemas import UserDB
 
 
-class User(Base):
-    __tablename__ = "users"
-
-    id = Column(Integer, primary_key=True, index=True)
+class User(Base, SQLAlchemyBaseUserTable):
     name = Column(String)
     login = Column(String, unique=True)
-    email = Column(String, unique=True)
-    hash_password = Column(String)
-    reg_date = Column(DateTime)
+    reg_date = Column(Date)
+
+
+users = User.__table__
+
+
+def get_user_db():
+    yield SQLAlchemyUserDatabase(UserDB, database, users)

@@ -1,15 +1,13 @@
-from sqlalchemy.orm import Session
-from .models import Card
+from core.database import database
+from .models import cards
 from .schemas import CardCreate
+from User.models import User
 
 
-def get_make_card(db: Session):
-    return db.query(Card).all()
+async def get_made_card():
+    return await database.fetch_all(query=cards.select())
 
 
-def create_card(db: Session, item: CardCreate):
-    card = Card(**item.dict())
-    db.add(card)
-    db.commit()
-    db.refresh(card)
-    return card
+async def create_card(item: CardCreate, user: User):
+    card = cards.insert().values(**item.dict(), user=user.id)
+    return await database.execute(card)
