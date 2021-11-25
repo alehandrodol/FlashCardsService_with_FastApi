@@ -1,32 +1,52 @@
-from typing import Optional
+from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
 
-from fastapi import Depends, Request
-from fastapi_users import BaseUserManager
+from jose import jwt, JWTError
+from passlib.context import CryptContext
 
-from .models import get_user_db
-from .schemas import UserCreate, UserDB
+from .JWT import SECRET_KEY, ALGORITHM
+from .models import User
 
-from .JWT import SECRET
+from core.database import get_db
 
-
-class UserManager(BaseUserManager[UserCreate, UserDB]):
-    user_db_model = UserDB
-    reset_password_token_secret = SECRET
-    verification_token_secret = SECRET
-
-    async def on_after_register(self, user: UserDB, request: Optional[Request] = None):
-        print(f"User {user.id} has registered.")
-
-    async def on_after_forgot_password(
-        self, user: UserDB, token: str, request: Optional[Request] = None
-    ):
-        print(f"User {user.id} has forgot their password. Reset token: {token}")
-
-    async def on_after_request_verify(
-        self, user: UserDB, token: str, request: Optional[Request] = None
-    ):
-        print(f"Verification requested for user {user.id}. Verification token: {token}")
+from typing import Union
+from sqlalchemy.orm import Session
 
 
-def get_user_manager(user_db=Depends(get_user_db)):
-    yield UserManager(user_db)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+
+def get_user(username: str, db: Session) -> User:
+    user = db.query(User).filter(User.username == username).first()
+    if user:
+        return user
+
+
+def authenticate_user(username: str, password: str, db: Session) -> Union[User, bool]:
+    user: User = get_user(username=username, db=db)
+    if not user:
+        return False
+    if not pwd_context.verify(password, user.password_hash):
+        return False
+    return user
+
+
+async def get_current_user(db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)) -> User:
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    user: User = get_user(db=db, username=username)
+    # if user is None:
+    #     raise credentials_exception
+    # Thought it would be better to still return None without exception to handle it correctly
+    return user

@@ -1,20 +1,22 @@
-from fastapi_users import models
-from datetime import date
+from pydantic import BaseModel
 
 
-class User(models.BaseUser):
-    name: str
-    login: str
-    reg_date: date
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 
-class UserCreate(User, models.BaseUserCreate):
+class UserBase(BaseModel):
+    username: str
+    password_hash: str
+
+
+class UserCreate(UserBase):
     pass
 
 
-class UserUpdate(models.BaseUserUpdate):
-    pass
+class User(UserBase):
+    id: int
 
-
-class UserDB(User, models.BaseUserDB):
-    pass
+    class Config:
+        orm_mode = True

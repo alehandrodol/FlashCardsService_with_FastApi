@@ -8,14 +8,11 @@ from fastapi_users_db_sqlalchemy import GUID
 class Card(Base):
     __tablename__ = "cards"
 
-    id = Column(Integer, primary_key=True, index=True)
-    term = Column(String)
-    value = Column(String)
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    front = Column(String)
+    back = Column(String)
     repeats = Column(Integer, default=0)
     active = Column(Boolean, default=True)
-    create_date = Column(DateTime(timezone=True), server_default=sql.func.now())
-    user = Column(GUID, ForeignKey("user.id"))
+    # create_date = Column(DateTime(timezone=True), server_default=sql.func.now())
+    user = Column(Integer, ForeignKey("users.id"))
     user_id = relationship(User)
-
-
-cards = Card.__table__

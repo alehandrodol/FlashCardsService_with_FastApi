@@ -2,14 +2,16 @@ from pydantic import BaseModel
 
 
 class CardBase(BaseModel):
-    term: str
-    value: str
-
-
-class CardList(CardBase):
-    id: int
+    front: str
+    back: str
 
 
 class CardCreate(CardBase):
+    pass
+
+
+class Card(CardBase):
+    id: int
+    user_id: int
     class Config:
         orm_mode = True
