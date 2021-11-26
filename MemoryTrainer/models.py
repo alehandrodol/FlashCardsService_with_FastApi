@@ -13,6 +13,6 @@ class Card(Base):
     back = Column(String)
     repeats = Column(Integer, default=0)
     active = Column(Boolean, default=True)
-    # create_date = Column(DateTime(timezone=True), server_default=sql.func.now())
+    create_date = Column(DateTime(timezone=True), server_default=sql.func.now())
     user = Column(Integer, ForeignKey("users.id"))
     user_id = relationship(User)

@@ -1,6 +1,6 @@
 from typing import Union
 
-from fastapi import FastAPI, Depends, status, HTTPException
+from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
 from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
@@ -9,12 +9,12 @@ from routes import routes
 from sqlalchemy.orm import Session
 
 from User.JWT import ACCESS_TOKEN_EXPIRE_HOURS, create_access_token
-from User.user_manager import pwd_context, authenticate_user, get_current_user, get_user
-from User.schemas import UserCreate, Token
+from User.user_manager import authenticate_user
+from User.schemas import Token
 from User.models import User
 
 from core.Base import Base
-from core.database import engine, get_db
+from core.database import engine, get_db, SessionLocal
 
 
 Base.metadata.create_all(bind=engine)
@@ -27,24 +27,20 @@ def gener_html(path: str) -> HTMLResponse:
     return HTMLResponse(content=html)
 
 
+@app.middleware("http")
+async def db_session_middleware(request: Request, call_next):
+    response = Response("Internal server error", status_code=500)
+    try:
+        request.state.db = SessionLocal()
+        response = await call_next(request)
+    finally:
+        request.state.db.close()
+    return response
+
+
 @app.get("/", response_class=HTMLResponse)
 def index_page():
     return gener_html("templates/index.html")
-
-
-@app.post("/register")
-async def register(new_user: UserCreate, db: Session = Depends(get_db)):
-    user = get_user(username=new_user.username, db=db)
-    if not user:
-        hashed_pwd = pwd_context.hash(new_user.password_hash)  # at the start password is not hashed
-        db_user = User(
-            username=new_user.username,
-            password_hash=hashed_pwd
-        )
-        db.add(db_user)
-        db.commit()
-        db.refresh(db_user)
-    return status.HTTP_200_OK
 
 
 @app.post("/token", response_model=Token)
@@ -63,11 +59,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
     )
 
     return {"access_token": access_token, "token_type": "bearer"}
-
-
-@app.get("/me")
-async def me(current_user: User = Depends(get_current_user)) -> int:
-    return current_user.id
 
 
 app.include_router(routes)

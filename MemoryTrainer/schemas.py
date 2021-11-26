@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from datetime import datetime
 
 
 class CardBase(BaseModel):
@@ -13,5 +14,7 @@ class CardCreate(CardBase):
 class Card(CardBase):
     id: int
     user_id: int
+    date: datetime
+
     class Config:
         orm_mode = True

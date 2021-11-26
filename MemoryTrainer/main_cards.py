@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
+from typing import List
 
 from User.models import User
 from User.user_manager import get_current_user
@@ -8,6 +9,7 @@ from core.database import get_db
 
 from .models import Card
 from .schemas import CardCreate
+
 
 router = APIRouter()
 
