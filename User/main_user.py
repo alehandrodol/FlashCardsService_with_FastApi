@@ -14,6 +14,11 @@ async def me(current_user: User = Depends(get_current_user)) -> int:
     return current_user.id
 
 
+@router.get("/{user_id}}")
+async def get_user_by_id(user_id: int, db: Session = Depends(get_db)) -> User:
+    return db.query(User).filter(User.id == user_id).first()
+
+
 @router.post("/register")
 async def register(new_user: UserCreate, db: Session = Depends(get_db)):
     user = get_user(username=new_user.username, db=db)

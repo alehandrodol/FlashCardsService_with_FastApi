@@ -43,7 +43,7 @@ def index_page():
     return gener_html("templates/index.html")
 
 
-@app.get("/token", response_model=Token)
+@app.post("/token", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user: Union[User, bool] = authenticate_user(form_data.username, form_data.password, db)
 

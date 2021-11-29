@@ -17,6 +17,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
+    admin: bool
 
     class Config:
         orm_mode = True
