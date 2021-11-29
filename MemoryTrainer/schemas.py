@@ -30,6 +30,7 @@ class CardCreate(CardBase):
 
 class CardShow(CardBase):
     id: int
+    group_id: int
 
 
 class Card(CardBase):
