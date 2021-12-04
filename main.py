@@ -1,5 +1,6 @@
 from typing import Union
 
+import uvicorn
 from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
 from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
@@ -62,3 +63,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
 
 
 app.include_router(routes)
+
+
+"""if __name__ == "__main__":
+    uvicorn.run(app=app, host="192.168.1.76", port=1234)"""
