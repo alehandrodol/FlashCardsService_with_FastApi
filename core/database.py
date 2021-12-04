@@ -3,7 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from fastapi import Request
 
-SQLALCHEMY_DATABASE_URL = "postgresql://alexey:Tozafa_alex02@localhost/kursach"
+SQLALCHEMY_DATABASE_URL = ""
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
 )
