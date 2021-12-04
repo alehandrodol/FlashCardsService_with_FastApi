@@ -3,7 +3,7 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, status, HTTPException, Response, Cookie
 from sqlalchemy.orm import Session
 
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Optional
 from random import randint
 from json import loads, dumps
 
@@ -14,7 +14,8 @@ from core.database import get_db
 
 from .models import Card, Group
 from .schemas import CardCreate, CardShow, GroupCreate
-
+from .service_funcs import get_cards_in_group_service, delete_card_service, \
+    get_group_cards_service, add_and_refresh_db, get_group_card, check_group
 
 router = APIRouter()
 
@@ -52,18 +53,6 @@ async def get_groups(current_user: User = Depends(get_current_user),
     return db.query(Group).filter(Group.user_id == current_user.id).all()
 
 
-def check_group(group_id: int,
-                current_user: User,
-                db: Session) -> bool:
-    users_groups: List[Group] = db.query(Group).filter(Group.user_id == current_user.id).all()
-    is_group_exist = False
-    for group in users_groups:
-        if group.id == group_id:
-            is_group_exist = True
-            break
-    return is_group_exist
-
-
 @router.post("/create_card")
 async def create_card(card: CardCreate,
                       response: Response,
@@ -87,15 +76,21 @@ async def create_card(card: CardCreate,
     return status.HTTP_200_OK
 
 
-def get_group_cards(group_id: int,
-                    response: Response,
-                    card_dict: Dict[str, List[int]],
-                    db: Session = Depends(get_db)) -> None:
-    list_card: List[Card] = db.query(Card).filter(Card.group_id == group_id, Card.active == True).all()
-    for card in list_card:
-        card_dict[str(group_id)].append(card.id)
-    response.set_cookie(key="card_dict", value=dumps(card_dict))
-    return
+@router.get("/cards_in/{group_id}")
+async def get_cards_in_group(group_id: int,
+                             current_user: User = Depends(get_current_user),
+                             db: Session = Depends(get_db)) -> List[Card]:
+    """This function returns all cards in group by id, only for authorized user"""
+
+    if not current_user:
+        return status.HTTP_401_UNAUTHORIZED
+
+    if not check_group(group_id=group_id, db=db, current_user=current_user):
+        raise HTTPException(status_code=400, detail="Group with this ID is not exist")
+
+    cards = get_cards_in_group_service(group_id=group_id, db=db)
+
+    return cards
 
 
 @router.get("/next/{group_id}")
@@ -106,6 +101,7 @@ async def get_next_card(group_id: int,
                         card_dict: Optional[str] = Cookie(default="{}")) -> Card:
     if not current_user:
         return status.HTTP_401_UNAUTHORIZED
+
     is_group_exist = check_group(group_id=group_id, current_user=current_user, db=db)
     if not is_group_exist:
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
@@ -116,10 +112,12 @@ async def get_next_card(group_id: int,
         card_dict[str(group_id)] = []
     finally:
         if len(card_dict[str(group_id)]) == 0:
-            get_group_cards(group_id=group_id, db=db, response=response, card_dict=card_dict)
+            get_group_cards_service(group_id=group_id, db=db, response=response, card_dict=card_dict)
+        if len(card_dict[str(group_id)]) == 0:
+            raise HTTPException(status_code=400, detail="Group with this ID is empty")
 
     #  sort_CARDS()
-    rand_num: int = randint(0, len(card_dict[str(group_id)])-1)
+    rand_num: int = randint(0, len(card_dict[str(group_id)]) - 1)
     card: Card = db.query(Card).filter(Card.id == card_dict[str(group_id)][rand_num]).first()
     card_dict[str(group_id)].pop(rand_num)
     response.set_cookie(key="card_id", value=str(card.id))
@@ -136,7 +134,7 @@ async def set_verdict(verdict: bool,
 
     temp_card: Card = db.query(Card).filter(Card.id == int(card_id)).first()
     if verdict:
-        if temp_card.true_verdicts + 1 > 4 and temp_card.repeats//2 < temp_card.true_verdicts + 1:
+        if temp_card.true_verdicts + 1 > 4 and temp_card.repeats // 2 < temp_card.true_verdicts + 1:
             temp_card.active = False
         else:
             temp_card.true_verdicts += 1
@@ -147,10 +145,27 @@ async def set_verdict(verdict: bool,
 
 
 @router.post("/activate")
-async def activate_cards_by_id(id_list: List[int], db: Session = Depends(get_db)):
+async def activate_cards_by_id(id_list: List[int],
+                               current_user: User = Depends(get_current_user),
+                               db: Session = Depends(get_db)):
+    """This function changes cell in column 'active' in table 'cards' to True state if it was False,
+    only for authorized users."""
+
+    if not current_user:
+        return status.HTTP_401_UNAUTHORIZED
+
     activated: List[int] = []
     for cur_id in id_list:
         temp_card: Card = db.query(Card).filter(Card.id == cur_id).first()
+
+        if temp_card is None:
+            raise HTTPException(status_code=400, detail=f"You don't have card with {cur_id} ID, "
+                                                        f"but these cards were activated: {activated}")
+
+        if not check_group(group_id=temp_card.group_id, current_user=current_user, db=db):
+            raise HTTPException(status_code=400, detail=f"You don't have card with {cur_id} ID, "
+                                                        f"but these cards were activated: {activated}")
+
         if temp_card.active:
             continue
 
@@ -164,7 +179,17 @@ async def activate_cards_by_id(id_list: List[int], db: Session = Depends(get_db)
 
 
 @router.get("/not_active_cards/{group_id}")
-async def get_not_active_cards(group_id: int, db: Session = Depends(get_db)) -> List[CardShow]:
+async def get_not_active_cards(group_id: int,
+                               current_user: User = Depends(get_current_user),
+                               db: Session = Depends(get_db)) -> List[CardShow]:
+    """This function returns cards_id as List from given group"""
+
+    if not current_user:
+        return status.HTTP_401_UNAUTHORIZED
+
+    if not check_group(group_id=group_id, db=db, current_user=current_user):
+        raise HTTPException(status_code=400, detail="Group with this ID is not exist")
+
     result: List[CardShow] = []
     temp_list: List[Card] = db.query(Card).filter(Card.active == False, Card.group_id == group_id).all()
     for card in temp_list:
@@ -178,7 +203,52 @@ async def get_not_active_cards(group_id: int, db: Session = Depends(get_db)) -> 
     return result
 
 
-def add_and_refresh_db(inst: Union[Card, Group], db: Session):
-    db.add(inst)
+@router.post("/delete_group")
+async def delete_group(group_id: int,
+                       current_user: User = Depends(get_current_user),
+                       db: Session = Depends(get_db)):
+    """This function deletes group by id, only for authorized user"""
+
+    if not current_user:
+        return status.HTTP_401_UNAUTHORIZED
+
+    is_group_exist = check_group(group_id=group_id, current_user=current_user, db=db)
+    if not is_group_exist:
+        raise HTTPException(status_code=400, detail="Group with this ID is not exist")
+
+    cards = get_cards_in_group_service(group_id=group_id, db=db)
+
+    for card in cards:
+        delete_card_service(card_id=card.id, db=db)
+
+    group = db.query(Group).filter(Group.id == group_id).first()
+
+    db.delete(group)
     db.commit()
-    db.refresh(inst)
+
+    return status.HTTP_200_OK
+
+
+@router.post("/delete_cards")
+async def delete_cards(cards_id: List[int],
+                       current_user: User = Depends(get_current_user),
+                       db: Session = Depends(get_db)):
+    """Delete cards from table 'cards' by id. You can delete cards only for authorized user"""
+
+    if not current_user:
+        return status.HTTP_401_UNAUTHORIZED
+
+    deleted_cards: List[int] = []
+    for cur_card_id in cards_id:
+        group_id = get_group_card(card_id=cur_card_id, db=db)
+        if group_id is None:
+            raise HTTPException(status_code=400, detail=f"You don't have card with {cur_card_id} ID, "
+                                                        f"but these cards were deleted: {deleted_cards}")
+        is_group_exist = check_group(group_id=group_id, current_user=current_user, db=db)
+        if not is_group_exist:
+            raise HTTPException(status_code=400, detail=f"You don't have card with {cur_card_id} ID, "
+                                                        f"but these cards were deleted: {deleted_cards}")
+        deleted_cards.append(cur_card_id)
+        delete_card_service(card_id=cur_card_id, db=db)
+
+    return status.HTTP_200_OK

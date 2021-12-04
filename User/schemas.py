@@ -8,11 +8,16 @@ class Token(BaseModel):
 
 class UserBase(BaseModel):
     username: str
-    password_hash: str
+    password: str
 
 
 class UserCreate(UserBase):
     pass
+
+
+class UserChangePass(BaseModel):
+    old_password: str
+    new_password: str
 
 
 class User(UserBase):
