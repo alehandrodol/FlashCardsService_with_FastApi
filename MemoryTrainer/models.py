@@ -2,7 +2,6 @@ from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, s
 from sqlalchemy.orm import relationship
 from core.database import Base
 from Group.models import Group
-from fastapi_users_db_sqlalchemy import GUID
 
 
 class Card(Base):

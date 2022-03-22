@@ -30,7 +30,7 @@ async def register(new_user: UserCreate, db: Session = Depends(get_db)):
     if user:
         raise HTTPException(status_code=400, detail="User already exist")
 
-    hashed_pwd = pwd_context.hash(new_user.password)  # at the start password is not hashed
+    hashed_pwd = pwd_context.hash(new_user.password)
     db_user = User(
         username=new_user.username,
         password_hash=hashed_pwd

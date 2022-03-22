@@ -2,9 +2,61 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>MainPage</title>
+    <title>Botan or baton?</title>
+    <link rel="stylesheet" href="/static/styles/styles.css" type="text/css">
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let btn = document.querySelector('input[type=submit]');
+            btn.addEventListener('click', async function (event) {
+                event.preventDefault()
+                let response = await fetch("/token", {
+                    method: "POST",
+                    body: new FormData(document.querySelector("form")),
+                    t
+                })
+                let body = document.querySelector("body");
+                body.style.display = "block";
+                if (response.status === 403){
+                    let wrong_div = document.querySelector("#WrongUser");
+                    wrong_div.style.display = "block";
+                }
+                if (response.status === 200){
+                    let right_div = document.querySelector("#RightUser");
+                    right_div.style.display = "block";
+                }
+            })
+        });
+
+    </script>
+
 </head>
 <body>
-    <p>Hello World!</p>
+    <div id="header">
+        <img src="/static/resources/bread.png" alt="bread" height="64" width="64"><b><h1 id="logo_h1"> Botan</h1></b>
+    </div>
+    <div id="body">
+        <h2 id="desc_h2" class="body_headers">Описание</h2>
+        <p id="desc_p" class="body_par">Данный сервис поможет вам изучать, зубрить, запоминать,<br>
+            вообщем-ботать ваши любимые предметы и темы</p>
+        <h2 id="abilities_h2" class="body_headers"> Возможности </h2>
+        <p id="abilities_p" class="body_par"> Здесь вы можете создать свой аккаунт в котором будут хранить ваши карточки <br>
+            Также в аккаунте вы сможете просматривать различную статистику по вашим повторениям <br>
+            Проходить тестирования <br>
+            Создавать/редактироват/удалять группы и карточки <br>
+            И дальше больше :)
+        </p>
+    </div>
+    <form method="POST" action="/login">
+        <input type="text" name="username" />
+        <input type="password" name="password" />
+        <input type="submit" value="Enter" />
+    </form>
+    <div id="WrongUser" style="display: none">
+        <p>Неправильный логин или пароль, попробуйте ещё раз.</p>
+    </div>
+    <div id="RightUser" style="display: none">
+        <p>Вы ввели правильные данные.</p>
+    </div>
 </body>
 </html>

@@ -4,6 +4,7 @@ import uvicorn
 from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
 from fastapi.responses import HTMLResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from fastapi.staticfiles import StaticFiles
 
 from datetime import timedelta
 from routes import routes
@@ -20,6 +21,7 @@ from core.database import engine, get_db, SessionLocal
 
 Base.metadata.create_all(bind=engine)
 app = FastAPI()
+app.mount("/static", StaticFiles(directory="templates"), name="static")
 
 
 def gener_html(path: str) -> HTMLResponse:
@@ -64,6 +66,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
 
 app.include_router(routes)
 
-
-"""if __name__ == "__main__":
+"""
+if __name__ == "__main__":
     uvicorn.run(app=app, host="192.168.1.76", port=1234)"""
