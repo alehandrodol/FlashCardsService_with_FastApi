@@ -33,7 +33,7 @@ async def register(new_user: UserCreate, db: Session = Depends(get_db)):
     hashed_pwd = pwd_context.hash(new_user.password)
     db_user = User(
         username=new_user.username,
-        password_hash=hashed_pwd
+        password_hash=hashed_pwd,
     )
 
     db.add(db_user)

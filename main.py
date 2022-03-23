@@ -25,7 +25,7 @@ app.mount("/static", StaticFiles(directory="templates"), name="static")
 
 
 def gener_html(path: str) -> HTMLResponse:
-    with open(path, "r") as file_html:
+    with open(path, "r", encoding="utf8") as file_html:
         html = file_html.read()
     return HTMLResponse(content=html)
 
@@ -44,6 +44,11 @@ async def db_session_middleware(request: Request, call_next):
 @app.get("/", response_class=HTMLResponse)
 def index_page():
     return gener_html("templates/index.html")
+
+
+@app.get("/groups", response_class=HTMLResponse)
+def get_logged():
+    return gener_html("templates/groups.html")
 
 
 @app.post("/token", response_model=Token)
