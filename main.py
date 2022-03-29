@@ -2,7 +2,7 @@ from typing import Union
 
 import uvicorn
 from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse, PlainTextResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 
@@ -11,7 +11,7 @@ from routes import routes
 from sqlalchemy.orm import Session
 
 from User.JWT import ACCESS_TOKEN_EXPIRE_HOURS, create_access_token
-from User.user_manager import authenticate_user
+from User.user_manager import authenticate_user, get_current_user
 from User.schemas import Token
 from User.models import User
 

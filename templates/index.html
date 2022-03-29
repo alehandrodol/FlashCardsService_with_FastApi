@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <title>Botan or baton?</title>
     <link rel="stylesheet" href="/static/styles/styles.css" type="text/css">
+    <link rel="stylesheet" href="/static/styles/auth_styles.css" type="text/css">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,16 +16,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Acme&family=Dancing+Script:wght@600&family=Mali:ital,wght@1,200&family=Montserrat:wght@600&family=Public+Sans&family=Secular+One&display=swap" rel="stylesheet">
 
     <script>
+        let windowInnerWidth = window.innerWidth
+        let windowInnerHeight = window.innerHeight
+        function myFunc() {
+            document.getElementById("main_body").style.height = windowInnerHeight + "px";
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
-            let btn = document.querySelector('input[type=submit]');
+            let btn = document.querySelector('input[id=enter]');
             btn.addEventListener('click', async function (event) {
                 event.preventDefault()
                 let response = await fetch("/token", {
                     method: "POST",
                     body: new FormData(document.querySelector("form"))
                 })
-                let body = document.querySelector("body");
-                body.style.display = "block";
                 if (response.status === 403){
                     let wrong_div = document.querySelector("#WrongUser");
                     wrong_div.style.display = "block";
@@ -32,48 +37,56 @@
                 if (response.status === 200){
                     let data = await response.json()
                     localStorage.setItem('token', data.access_token);
-                    window.location.replace(`/groups`)
-                    await fetch("/groups", {
-                        method: "GET",
-                        headers: {
-                            Authorization: `Bearer ${data.access_token}`
-                        }
-                    }).then(() => {
-                        window.location.href = "/groups"
-                    })
+                    let new_html = (await fetch("/groups", {
+                        method: "GET"
+                    })).text()
+                    document.documentElement.innerHTML = (await new_html).toString();
+                    window.history.pushState({},"", "/groups");
+                    myFunc();
                 }
             })
+            let btn2 = document.querySelector('input[id=register_but]');
+            btn2.addEventListener('click', async function (event) {
+                event.preventDefault()
+                let response = await fetch("/user/register", {
+                    method: "POST",
+                    body: new FormData(document.querySelector("form"))
+                })
+                if (response.status === 200)
+                    alert("Успешно!");
+                else
+                    alert("Упс, произошла ошибка")
+            });
         });
 
     </script>
-
 </head>
-<body>
-    <div id="header">
-        <img src="/static/resources/bread.png"><b><h1 id="logo_h1"> BOtan</h1></b>
-    </div>
-    <div id="body">
+<body id="main_body" onload="myFunc()">
+    <header>
+        <img src="/static/resources/bread.png" onclick=""><b><h1 id="logo_h1"> BOtan</h1></b>
+    </header>
+    <main id="main">
         <p id="desc_p" class="body_par">Данный сервис поможет вам изучать, зубрить, запоминать,<br>
             просто-ботать ваши любимые предметы и темы</p>
         <p id="abilities_p" class="body_par"> Здесь вы можете создать свой аккаунт в котором будут хранить ваши карточки <br>
             Также в аккаунте вы сможете просматривать различную статистику по вашим повторениям <br>
             Проходить тестирования <br>
-            Создавать/редактироват/удалять группы и карточки <br>
+            Создавать/редактировать/удалять группы и карточки <br>
             И дальше больше :)
         </p>
 
-        <form method="POST" action="/login" id="auth_form">
+        <form method="POST" id="auth_form">
             <input type="text" name="username" class="intext formelem" placeholder="Login" maxlength="50"/>
             <input type="password" name="password" class="intext formelem" aria-valuetext="Password" maxlength="50" placeholder="Password"/>
             <div class="formelem">
-                <input type="submit" value="Регестрация" class="formbut" id="purple"/>
-                <input type="submit" value="Войти" class="formbut"/>
+                <input formaction="/register" type="submit" value="Регистрация" class="formbut" id="register_but" />
+                <input type="submit" value="Войти" class="formbut" formaction="/token" id="enter"/>
             </div>
 
         </form>
-    </div>
-    <div id="rectangle_footer">
+    </main>
+    <footer>
         <p>&#169; Alexey Dolgikh 2022</p>
-    </div>
+    </footer>
 </body>
 </html>

@@ -1,31 +1,13 @@
-#header{
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
-    align-items: center;
-    width: 70%;
-    flex: 1;
-}
 body{
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-    background-color: #C8A9DC;
     width: 100%;
     margin: auto;
     height: 1300px;
-}
-
-#body{
-    display: flex;
-    flex-direction: column;
-    width: 66%;
-    background-color: #FFFFFF;
-    align-items: center;
-    border-radius: 15px;
-    flex: 6;
-    justify-content: space-between;
+    min-height: 800px;
+    min-width: 1200px;
 }
 
 #logo_h1{
@@ -42,7 +24,7 @@ body{
 }
 
 
-#rectangle_footer {
+footer {
 	width: 100%;
 	background: #60367A;
     flex: 1;
@@ -52,72 +34,8 @@ body{
     justify-content: flex-end;
 }
 
-#rectangle_footer p{
+footer p{
     color: #FFFFFF;
     font-size: 22px;
 }
 
-#auth_form{
-    display: flex;
-    flex-direction: column;
-    width: 40%;
-    padding-bottom: 50px;
-    flex: 6;
-}
-
-.formelem{
-    flex: 1;
-    margin-block: 15px;
-    border-radius: 10px;
-    font-size: x-large;
-    border-width: 1px;
-    font-family: 'Montserrat', sans-serif;
-    width: 100%;
-}
-
-input:focus::placeholder{
-    opacity: 0;
-}
-
-#desc_p{
-    padding-top: 30px;
-    flex: 1;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 35px;
-    width: 80%;
-    text-align: center;
-}
-#abilities_p{
-    flex: 5;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 35px;
-    width: 80%;
-    background-color: #FFE4AF;
-    border-radius: 10px;
-    margin: 5px;
-    margin-inside: 10px;
-    text-align: left;
-}
-
-.intext {
-    background-color: #f8e5ff;
-}
-
-.formbut{
-    font-size: xx-large;
-    background-color: #fbffc9;
-    flex: 0 1 45%;
-    border-radius: 10px;
-    border-width: 1px;
-    font-family: 'Montserrat', sans-serif;
-    height: 90%;
-}
-
-#purple{
-    background-color: #C8A9DC;
-}
-
-#auth_form div {
-    display: flex;
-    justify-content: space-between;
-}

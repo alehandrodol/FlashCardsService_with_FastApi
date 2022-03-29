@@ -31,3 +31,4 @@ def get_cards_in_group_service(group_id: int,
     cards: List[Card] = db.query(Card).filter(Card.group_id == group_id).all()
 
     return cards
+

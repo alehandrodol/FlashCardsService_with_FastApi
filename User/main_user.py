@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 
 from core.database import get_db
@@ -12,9 +13,6 @@ router = APIRouter()
 @router.get("/me")
 async def me(current_user: User = Depends(get_current_user)) -> int:
 
-    if not current_user:
-        return status.HTTP_401_UNAUTHORIZED
-
     return current_user.id
 
 
@@ -24,15 +22,15 @@ async def get_user_by_id(user_id: int, db: Session = Depends(get_db)) -> User:
 
 
 @router.post("/register")
-async def register(new_user: UserCreate, db: Session = Depends(get_db)):
-    user = get_user(username=new_user.username, db=db)
+async def register(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
+    user = get_user(username=form_data.username, db=db)
 
     if user:
         raise HTTPException(status_code=400, detail="User already exist")
 
-    hashed_pwd = pwd_context.hash(new_user.password)
+    hashed_pwd = pwd_context.hash(form_data.password)
     db_user = User(
-        username=new_user.username,
+        username=form_data.username,
         password_hash=hashed_pwd,
     )
 

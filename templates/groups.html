@@ -4,22 +4,72 @@
     <meta charset="UTF-8">
     <title>Botan or baton?</title>
     <link rel="stylesheet" type="text/css" href="/static/styles/styles.css">
+    <link rel="stylesheet" type="text/css" href="/static/styles/groups_styles.css">
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mali:ital,wght@1,200&family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Dancing+Script:wght@600&family=Mali:ital,wght@1,200&family=Montserrat:wght@600&family=Public+Sans&family=Secular+One&display=swap" rel="stylesheet">
+
+    <script>
+        let windowInnerHeight = window.innerHeight
+        function myFunc() {
+            document.getElementById("main_body").style.height = windowInnerHeight + "px";
+        }
+    </script>
 </head>
-<body>
-    <div id="header">
-        <img src="/static/resources/bread.png"><b><h1 id="logo_h1"> BOtan</h1></b>
-    </div>
-    <div id="body">
-        <div><h2 id="groups_h2" class="body_header">Группы</h2></div>
-        <div>
-            <ul>
-                <li>Английские слова</li>
-                <li>Вопросы по сетям</li>
-                <li>Алгоритмы по дискретке</li>
-            </ul>
+<body id="main_body" onload="myFunc()">
+    <header>
+        <img src="/static/resources/bread.png" id="logo">
+        <b><h1 id="page_name">Списки групп</h1></b>
+        <button id="exit">Выйти</button>
+    </header>
+    <main>
+        <div class="groups_cards">
+            <div class="group_card">
+                <button class="card_main odd_card"></button>
+                <div class="card_buttons">
+                    <button class="delete_card"></button>
+                    <div></div>
+                    <button class="test_card"></button>
+                </div>
+            </div>
+            <div class="group_card">
+                <button class="card_main even_card"></button>
+                <div class="card_buttons">
+                    <button class="delete_card"></button>
+                    <div></div>
+                    <button class="test_card"></button>
+                </div>
+            </div>
+            <div class="group_card">
+                <button class="card_main odd_card"></button>
+                <div class="card_buttons">
+                    <button class="delete_card"></button>
+                    <div></div>
+                    <button class="test_card"></button>
+                </div>
+            </div>
+            <div class="group_card">
+                <button class="card_main even_card"></button>
+                <div class="card_buttons">
+                    <button class="delete_card"></button>
+                    <div></div>
+                    <button class="test_card"></button>
+                </div>
+            </div>
         </div>
-
-
-    </div>
+        <div class="group_buttons">
+            <button id="create">Создать</button>
+            <div></div>
+            <button id="edit">Редактировать</button>
+        </div>
+    </main>
+    <footer>
+        <p>&#169; Alexey Dolgikh 2022</p>
+    </footer>
 </body>
 </html>

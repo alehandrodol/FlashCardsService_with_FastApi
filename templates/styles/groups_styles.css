@@ -1,0 +1,135 @@
+header{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    flex: 2;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    background-color: #FFFFFF;
+    align-items: center;
+    flex: 7;
+    justify-content: space-around;
+    width: 80%;
+}
+
+.groups_cards {
+    display: flex;
+    flex-direction: row;
+    flex: 5;
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+}
+
+.group_card {
+    display: flex;
+    flex-direction: column;
+    height: 75%;
+    flex: 1;
+    align-items: center;
+}
+
+.group_card button{
+    flex: 4;
+    border-radius: 12px;
+    border-width: 0;
+}
+
+.card_main {
+    width: 66%;
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+.card_buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 55%;
+    flex: 1;
+}
+
+.card_buttons button{
+    flex: 4;
+}
+
+.card_buttons div{
+    flex: 3;
+}
+
+.group_buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 50%;
+    align-items: center;
+    flex: 1;
+    margin-bottom: 1%;
+}
+
+#edit {
+    background-color: #FFE4AF;
+}
+
+#create {
+    background-color: #EF9452;
+    color: #FFFFFF;
+}
+
+#exit {
+    font-size: x-large;
+    background-color: #C8A9DC;
+    border-width: 0;
+    height: 40%;
+    border-radius: 8px;
+    padding: 0 2%;
+}
+
+#page_name {
+    font-family: 'Montserrat', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 90px;
+    line-height: 108px;
+    color: #351C45;
+    padding-left: 10px;
+}
+
+.group_buttons button {
+    font-size: xx-large;
+    flex: 5;
+    border-radius: 10px;
+    border-width: 0;
+    font-family: 'Montserrat', sans-serif;
+    height: 50%;
+}
+
+.group_buttons div {
+    flex: 2;
+}
+
+.odd_card {
+    background-color: #FFE4AF;
+}
+
+.even_card {
+    background-color: #C8A9DC;
+}
+
+.delete_card {
+    background-color: #FFCE6D;
+}
+
+.test_card {
+    background-color: #351C45;
+}
+
+#logo {
+    background-color: #C8A9DC;
+    border-radius: 70px;
+}
