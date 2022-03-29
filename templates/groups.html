@@ -15,16 +15,26 @@
     <link href="https://fonts.googleapis.com/css2?family=Acme&family=Dancing+Script:wght@600&family=Mali:ital,wght@1,200&family=Montserrat:wght@600&family=Public+Sans&family=Secular+One&display=swap" rel="stylesheet">
 
     <script>
-        let windowInnerHeight = window.innerHeight
-        function myFunc() {
-            document.getElementById("main_body").style.height = windowInnerHeight + "px";
-        }
+        document.addEventListener("DOMContentLoaded", function() {
+            let btn = document.querySelector('button[id=exit]');
+            btn.addEventListener('click', async function (event) {
+                event.preventDefault();
+                let response = await fetch("/", {
+                    method: "GET"
+                });
+                if (response.status === 200){
+                    document.documentElement.innerHTML = (await ((await response).text())).toString()
+                    window.history.pushState({},"", "/");
+                    localStorage.removeItem('token');
+                }
+            });
+        });
     </script>
 </head>
-<body id="main_body" onload="myFunc()">
+<body id="main_body">
     <header>
         <img src="/static/resources/bread.png" id="logo">
-        <b><h1 id="page_name">Списки групп</h1></b>
+        <h1 id="page_name">Списки групп</h1>
         <button id="exit">Выйти</button>
     </header>
     <main>
@@ -34,7 +44,7 @@
                 <div class="card_buttons">
                     <button class="delete_card"></button>
                     <div></div>
-                    <button class="test_card"></button>
+                    <button class="test_card"><div class="triangle"></div></button>
                 </div>
             </div>
             <div class="group_card">

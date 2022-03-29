@@ -82,7 +82,7 @@ main{
 }
 
 #exit {
-    font-size: x-large;
+    font-size: xx-large;
     background-color: #C8A9DC;
     border-width: 0;
     height: 40%;
@@ -93,11 +93,11 @@ main{
 #page_name {
     font-family: 'Montserrat', sans-serif;
     font-style: normal;
-    font-weight: 700;
-    font-size: 90px;
-    line-height: 108px;
+    font-size: 2cm;
     color: #351C45;
     padding-left: 10px;
+    text-decoration: underline;
+    text-underline-offset: 12px;
 }
 
 .group_buttons button {

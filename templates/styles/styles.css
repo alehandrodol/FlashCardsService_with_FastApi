@@ -5,7 +5,7 @@ body{
     align-items: center;
     width: 100%;
     margin: auto;
-    height: 1300px;
+    height: 100vh;
     min-height: 800px;
     min-width: 1200px;
 }
@@ -13,12 +13,9 @@ body{
 #logo_h1{
     font-family: 'Acme', sans-serif;
     font-style: normal;
-    font-weight: 700;
-    font-size: 90px;
-    line-height: 108px;
     color: #351C45;
-    padding-left: 10px;
-    text-underline-color: #351C45;
+    margin-left: 10px;
+    font-size: calc(45px + 2vh);
     text-decoration: underline;
     text-underline-offset: 10px;
 }

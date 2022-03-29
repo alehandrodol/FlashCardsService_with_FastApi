@@ -21,66 +21,108 @@ header{
 #auth_form{
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
     width: 40%;
-    padding-bottom: 50px;
-    flex: 6;
+    flex: 4;
 }
 
 .formelem{
     flex: 1;
-    margin-block: 15px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: row;
     border-radius: 10px;
     font-size: x-large;
     border-width: 1px;
     font-family: 'Montserrat', sans-serif;
-    width: 100%;
 }
 
 input:focus::placeholder{
     opacity: 0;
 }
 
-#desc_p{
-    padding-top: 30px;
-    flex: 1;
+input::-webkit-input-placeholder {
+    color: black;
+}
+
+#desc {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 2;
+}
+
+#desc p{
     font-family: 'Montserrat', sans-serif;
-    font-size: 35px;
+    font-size:calc(15px + 1vh);
     width: 80%;
     text-align: center;
+    font-style: italic;
 }
-#abilities_p{
-    flex: 5;
-    font-family: 'Montserrat', sans-serif;
-    font-size: 30px;
-    width: 80%;
+
+#abilities {
+    width: 100%;
     background-color: #FFE4AF;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    flex: 5;
+}
+
+#abilities p{
+
+    font-family: 'Montserrat', sans-serif;
+    font-size:calc(15px + 1vw);
+    width: 80%;
+    font-style: italic;
     border-radius: 10px;
     margin: 5px;
     margin-inside: 10px;
     text-align: left;
+    min-font-size: 10px;
 }
 
 .intext {
-    background-color: #f8e5ff;
+    background-color: #FFFFFF;
+    color: black;
+    width: 100%;
+    flex: 1;
+    border-radius: 10px;
+    font-size: calc(13px + 1.2vh);
+    border-width: 2px;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
 }
 
 .formbut{
-    font-size: xx-large;
+    font-size: calc(12px + 1.1vh);
     background-color: #FFE4AF;
-    flex: 0 1 45%;
+    flex: 5;
     border-radius: 10px;
     border-width: 1px;
     font-family: 'Montserrat', sans-serif;
     height: 90%;
 }
 
-#register_but {
-    background-color: #C8A9DC;
+.formbuts{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    flex: 1;
+    width: 101%;
 }
 
-#auth_form div {
-    display: flex;
-    justify-content: space-between;
+.formbuts div {
+    flex: 1;
+}
+
+#register_but {
+    background-color: #C8A9DC;
 }
 
 #enter {
@@ -89,4 +131,15 @@ input:focus::placeholder{
 
 body {
     background-color: #C8A9DC;
+}
+
+#main_logo {
+    height: 12vh;
+    width: auto;
+    min-height: 95px;
+    min-width: 81px;
+}
+
+h1{
+    margin: 0;
 }
