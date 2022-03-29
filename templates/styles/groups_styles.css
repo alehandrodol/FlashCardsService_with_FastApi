@@ -74,15 +74,17 @@ main{
 
 #edit {
     background-color: #FFE4AF;
+    font-size: calc(20px + 1vh);
 }
 
 #create {
     background-color: #EF9452;
     color: #FFFFFF;
+    font-size: calc(18px + 1vh);
 }
 
 #exit {
-    font-size: xx-large;
+    font-size: calc(18px + 1vh);;
     background-color: #C8A9DC;
     border-width: 0;
     height: 40%;

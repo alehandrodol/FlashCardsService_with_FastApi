@@ -16,6 +16,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Acme&family=Dancing+Script:wght@600&family=Mali:ital,wght@1,200&family=Montserrat:wght@600&family=Public+Sans&family=Secular+One&display=swap" rel="stylesheet">
 
     <script>
+        function rel(){
+            location.reload();
+        }
+
         document.addEventListener("DOMContentLoaded", function() {
             let btn = document.querySelector('input[id=enter]');
             btn.addEventListener('click', async function (event) {
@@ -36,6 +40,7 @@
                     })).text();
                     document.documentElement.innerHTML = (await new_html).toString();
                     window.history.pushState({},"", "/groups");
+                    rel();
                 }
             })
             let btn2 = document.querySelector('input[id=register_but]');
