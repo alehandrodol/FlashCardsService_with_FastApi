@@ -49,22 +49,31 @@ main{
     border-width: 0;
 }
 
+.div_card_main {
+    flex: 18;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+
+}
+
 .card_main {
     width: 66%;
-    margin-top: 10%;
-    margin-bottom: 10%;
+    margin-bottom: 7%;
 }
 
 .card_buttons {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
+    align-items: center;
     width: 55%;
-    flex: 1;
+    flex: 4;
 }
 
 .middle_div{
-    flex: 3;
+    flex: 1;
 }
 
 .group_buttons {
@@ -79,7 +88,7 @@ main{
 
 #edit {
     background-color: #FFE4AF;
-    font-size: calc(20px + 1vh);
+    font-size: calc(18px + 1vh);
 }
 
 #create {
@@ -108,7 +117,6 @@ main{
 }
 
 .group_buttons button {
-    font-size: xx-large;
     flex: 5;
     border-radius: 10px;
     border-width: 0;
@@ -130,24 +138,33 @@ main{
 
 .delete_card {
     background-color: #FFCE6D;
+    border-radius: 12px;
+    flex-shrink: 0;
+    width: calc(7vh*1.25);
+    height: 6.5vh;
+    min-width: 74px;
+    max-width: 50%;
+    background-image: url("../resources/cross.png");
+    background-size: 55%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .test_card {
-    display: flex;
-    justify-content: center;
-    align-items: center;
     background-color: #351C45;
+    border-radius: 50%;
+    flex-shrink: 0;
+    width: 6vh;
+    min-width: 59px;
+    height: 6vh;
+    background-image: url("../resources/play.png");
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
 }
 
 .card_but {
-    flex: 5;
-    border-radius: 12px;
     border-width: 0;
-}
-
-#logo {
-    background-color: #C8A9DC;
-    border-radius: 50%;
 }
 
 .switcher {
@@ -157,7 +174,7 @@ main{
     align-items: center;
     justify-content: center;
     flex: 1;
-    padding-bottom: 10%;
+    margin-bottom: 10%;
 }
 
 .switch_groups {
@@ -166,4 +183,23 @@ main{
     background-color: #351C45;
     color: #FFFFFF;
     font-size: calc(25px + 1.8vh);
+}
+
+#logo {
+    height: 15vh;
+    width: auto;
+    min-height: 95px;
+    min-width: 81px;
+}
+
+@media (max-width: 1201px){
+    .test_card {
+        width: 59px;
+        height: 59px;
+    }
+
+    .delete_card {
+        height: 59px;
+        width: 74px;
+    }
 }
