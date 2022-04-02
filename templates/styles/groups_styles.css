@@ -16,6 +16,12 @@ main{
     justify-content: space-around;
 }
 
+#content {
+    display: flex;
+    flex: 5;
+    width: 100%;
+}
+
 #main_groups {
     display: flex;
     flex-direction: column;
@@ -29,7 +35,7 @@ main{
 .groups_cards {
     display: flex;
     flex-direction: row;
-    flex: 5;
+    flex: 1;
     justify-content: space-between;
     width: 100%;
     align-items: center;
@@ -181,8 +187,19 @@ main{
     border-radius: 50%;
     border-width: 0;
     background-color: #351C45;
-    color: #FFFFFF;
-    font-size: calc(25px + 1.8vh);
+    background-image: url("../resources/play.png");
+    background-size: 80%;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 8vh;
+    flex-shrink: 0;
+    height: 8vh;
+    min-width: 58px;
+    min-height: 58px;
+}
+
+#left_but {
+    transform: scaleX(-1);
 }
 
 #logo {

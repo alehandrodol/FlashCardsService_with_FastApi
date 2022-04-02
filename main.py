@@ -1,5 +1,6 @@
 from typing import Union
 
+import re
 import uvicorn
 from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, PlainTextResponse
@@ -24,10 +25,10 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="templates"), name="static")
 
 
-def gener_html(path: str) -> HTMLResponse:
+def gener_html(path: str) -> str:
     with open(path, "r", encoding="utf8") as file_html:
         html = file_html.read()
-    return HTMLResponse(content=html)
+    return html
 
 
 @app.middleware("http")
@@ -43,12 +44,18 @@ async def db_session_middleware(request: Request, call_next):
 
 @app.get("/", response_class=HTMLResponse)
 def index_page():
-    return gener_html("templates/index.html")
+    return HTMLResponse(content=gener_html("templates/index.html"))
 
 
 @app.get("/groups", response_class=HTMLResponse)
 def get_logged():
-    return gener_html("templates/groups.html")
+    html_page = gener_html("templates/inside_template.html")
+    inner = gener_html("templates/groups.html")
+    inner = "\t\t\t" + inner[:] + "\n"
+    ind = html_page.find('id="content"')
+    ind += 13
+    html_page = html_page[:ind+1] + inner + html_page[ind+1:]
+    return HTMLResponse(content=html_page)
 
 
 @app.post("/token", response_model=Token)
