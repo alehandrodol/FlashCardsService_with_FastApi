@@ -1,62 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Botan or baton?</title>
-    <link rel="stylesheet" type="text/css" href="/static/styles/styles.css">
-    <link rel="stylesheet" type="text/css" href="/static/styles/groups_styles.css">
-
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Mali:ital,wght@1,200&family=Montserrat:wght@600&display=swap" rel="stylesheet">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Dancing+Script:wght@600&family=Mali:ital,wght@1,200&family=Montserrat:wght@600&family=Public+Sans&family=Secular+One&display=swap" rel="stylesheet">
-
-    <script>
-        function rel(){
-            location.reload();
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            let btn = document.querySelector('button[id=exit]');
-            btn.addEventListener('click', async function (event) {
-                event.preventDefault();
-                let response = await fetch("/", {
-                    method: "GET"
-                });
-                if (response.status === 200){
-                    document.documentElement.innerHTML = (await ((await response).text())).toString()
-                    window.history.pushState({},"", "/");
-                    localStorage.removeItem('token');
-                    rel();
-                }
-            });
-        });
-    </script>
-</head>
-<body id="main_body">
-    <header>
-        <img src="/static/resources/bread.png" id="logo" alt="bread_logo">
-        <h1 id="page_name">Списки групп</h1>
-        <button id="exit">Выйти</button>
-    </header>
-    <main>
-        <div class="switcher"><button class="switch_groups" id="left_but"></button></div>
-        <div id="main_groups">
-            <div id="content">
-            </div>
-            <div class="group_buttons">
-                <button id="create">Создать</button>
-                <div></div>
-                <button id="edit">Редактировать</button>
-            </div>
-        </div>
-        <div class="switcher"><button class="switch_groups" id="right_but"></button></div>
-    </main>
-    <footer>
-        <p>&#169; Alexey Dolgikh 2022</p>
-    </footer>
-</body>
-</html>
+{% include 'head.html' %}
+{% include 'header.html' %}
+{% if path|string() == 'groups' %}
+    {% include 'groups.html' %}
+{% elif path|string() == 'cards' %}
+    {% include 'cards_page.html' %}
+{% endif %}
+{% include 'footer.html' %}

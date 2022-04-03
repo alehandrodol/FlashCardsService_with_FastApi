@@ -6,6 +6,7 @@ from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, PlainTextResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
 
 from datetime import timedelta
 from routes import routes
@@ -24,11 +25,13 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI()
 app.mount("/static", StaticFiles(directory="templates"), name="static")
 
+templates = Jinja2Templates(directory="templates")
 
-def gener_html(path: str) -> str:
-    with open(path, "r", encoding="utf8") as file_html:
-        html = file_html.read()
-    return html
+
+# def gener_html(path: str) -> str:
+#     with open(path, "r", encoding="utf8") as file_html:
+#         html = file_html.read()
+#     return html
 
 
 @app.middleware("http")
@@ -43,19 +46,18 @@ async def db_session_middleware(request: Request, call_next):
 
 
 @app.get("/", response_class=HTMLResponse)
-def index_page():
-    return HTMLResponse(content=gener_html("templates/index.html"))
+def index_page(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
 
 
 @app.get("/groups", response_class=HTMLResponse)
-def get_logged():
-    html_page = gener_html("templates/inside_template.html")
-    inner = gener_html("templates/groups.html")
-    inner = "\t\t\t" + inner[:] + "\n"
-    ind = html_page.find('id="content"')
-    ind += 13
-    html_page = html_page[:ind+1] + inner + html_page[ind+1:]
-    return HTMLResponse(content=html_page)
+def get_logged(request: Request):
+    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "groups", "title": "Список групп"})
+
+
+@app.get("/cards", response_class=HTMLResponse)
+def get_logged(request: Request):
+    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "cards", "title": "Список карт"})
 
 
 @app.post("/token", response_model=Token)
@@ -78,6 +80,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = 
 
 app.include_router(routes)
 
-"""
-if __name__ == "__main__":
-    uvicorn.run(app=app, host="192.168.1.76", port=1234)"""
+
+# if __name__ == "__main__":
+#     uvicorn.run(app=app, host="192.168.1.76", port=1234)

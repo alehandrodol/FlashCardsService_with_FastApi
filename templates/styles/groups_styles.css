@@ -35,7 +35,7 @@ main{
 .groups_cards {
     display: flex;
     flex-direction: row;
-    flex: 1;
+    flex: 5;
     justify-content: space-between;
     width: 100%;
     align-items: center;
@@ -110,10 +110,11 @@ main{
     height: 40%;
     border-radius: 8px;
     padding: 0 2%;
+    font-family: 'Nunito', sans-serif;
 }
 
 #page_name {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Montserrat Alternates', sans-serif;
     font-style: normal;
     font-size: 2cm;
     color: #351C45;
@@ -126,7 +127,7 @@ main{
     flex: 5;
     border-radius: 10px;
     border-width: 0;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Nunito', sans-serif;
     height: 50%;
 }
 
@@ -171,6 +172,7 @@ main{
 
 .card_but {
     border-width: 0;
+    cursor: pointer;
 }
 
 .switcher {
