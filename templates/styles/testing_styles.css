@@ -1,0 +1,59 @@
+body {
+    background: #F6E8FF !important;
+    min-width: 1000px !important;
+}
+
+.header {
+    flex: 2;
+}
+
+main {
+    flex: 7;
+    width: 60%;
+    background-color: #FFFFFF !important;
+    border-radius: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#inside_main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    flex: 1;
+    width: 100%;
+}
+
+.yellow_div{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #FFE4AF;
+    width: 60%;
+    flex: 4;
+    margin-top: 5%;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+#term_of_card {
+
+}
+
+.yes_no_buts {
+    width: 50%;
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.btn {
+    padding: 0 !important;
+}
+
+

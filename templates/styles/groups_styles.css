@@ -151,10 +151,12 @@ main{
     height: 6.5vh;
     min-width: 74px;
     max-width: 50%;
-    background-image: url("../resources/cross.png");
-    background-size: 55%;
-    background-repeat: no-repeat;
-    background-position: center;
+    color: #FFFFFF;
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-right: 0.05em;
 }
 
 .test_card {
@@ -164,10 +166,11 @@ main{
     width: 6vh;
     min-width: 59px;
     height: 6vh;
-    background-image: url("../resources/play.png");
-    background-size: 80%;
-    background-repeat: no-repeat;
-    background-position: center;
+    font-size: 2rem;
+    padding-left: 0.12em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .card_but {
@@ -189,15 +192,13 @@ main{
     border-radius: 50%;
     border-width: 0;
     background-color: #351C45;
-    background-image: url("../resources/play.png");
-    background-size: 80%;
-    background-repeat: no-repeat;
-    background-position: center;
+    font-size: 2.5em;
     width: 8vh;
     flex-shrink: 0;
     height: 8vh;
     min-width: 58px;
     min-height: 58px;
+    padding-left: 0.33em;
 }
 
 #left_but {

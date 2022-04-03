@@ -1,0 +1,19 @@
+{% include 'head.html' %}
+<body id="main_body">
+    <header>
+        <img src="/static/resources/bread.png" id="logo" alt="bread_logo">
+        <h1 id="page_name">{{ title }}</h1>
+        <button type="button" class="btn-close btn-lg" onclick="back_to_groups()"></button>
+    </header>
+    <main>
+        <div id="inside_main">
+            <div class="yellow_div">
+                <p class="fs-3" id="term_of_card">Some text here <br> Brrrr.... guhergeruejgr</p>
+            </div>
+            <div class="yes_no_buts mb-lg-4">
+                <button class="btn btn-danger text-white w-25 h-50" id="but_no"><i class="bi bi-x-square"  style="font-size: 2rem"></i></button>
+                <button class="btn btn-success w-25 h-50" id="but_yes"><i class="bi bi-check-circle" style="font-size: 2rem"></i></button>
+            </div>
+        </div>
+    </main>
+{% include 'footer.html' %}

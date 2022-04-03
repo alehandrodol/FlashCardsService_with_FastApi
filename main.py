@@ -60,6 +60,11 @@ def get_logged(request: Request):
     return templates.TemplateResponse("inside_template.html", {"request": request, "path": "cards", "title": "Список карт"})
 
 
+@app.get("/testing", response_class=HTMLResponse)
+def get_logged(request: Request):
+    return templates.TemplateResponse("testing.html", {"request": request, "path": "test", "title": "Название группы"})
+
+
 @app.post("/token", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user: Union[User, bool] = authenticate_user(form_data.username, form_data.password, db)
