@@ -1,6 +1,6 @@
 <main>
     <div id="main_cards">
-        <div class="term_cards">
+        <div class="term_cards" id="cards_container">
             <div class="check_and_but"> <input type="checkbox" class="toDelete" id="1"><label for="1"></label> <div class="term_card odd_term"> <h2>Первый</h2> </div> </div>
             <div class="check_and_but"> <input type="checkbox" class="toDelete" id="2"><label for="2"></label> <div class="term_card even_term"> <h2>Второй</h2> </div> </div>
             <div class="check_and_but"> <input type="checkbox" class="toDelete" id="3"><label for="3"></label> <div class="term_card odd_term"> <h2>Третий</h2> </div> </div>
@@ -11,4 +11,27 @@
         </div>
     {% include 'create-edit-buttons.html' %}
     </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content align-items-center" id="mod-cont-card-id">
+                  <div class="modal-header d-flex justify-content-center mt-3">
+                    <h5 class="modal-title fs-2" id="exampleModalLabel">Создать новую карточку</h5>
+                  </div>
+                  <div class="modal-body d-flex justify-content-center align-content-center w-100 mb-3">
+                    <form>
+                      <div class=" w-75">
+                          <label for="front-card" class="col-form-label text-white fs-4">Слово/Вопрос</label>
+                          <input type="text" class="form-control mb-3 fs-4" id="front-card">
+                          <label for="back-card" class="col-form-label text-white fs-4">Значение/Ответ</label>
+                          <input type="text" class="form-control fs-4" id="back-card">
+                      </div>
+                    </form>
+                  </div>
+                  <div class="modal-footer w-75 d-flex flex- justify-content-between align-items-center mb-5">
+                    <button type="button" class="btn me-3 fs-4 cancel" data-bs-dismiss="modal">Отмена</button>
+                    <button type="button" class="btn ms-3 fs-4 approve" onclick="createNewCard()" data-bs-dismiss="modal">Создать</button>
+                  </div>
+                </div>
+            </div>
+        </div>
 </main>

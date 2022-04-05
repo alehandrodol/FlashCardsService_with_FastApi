@@ -3,9 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <title>Botan or baton?</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
+    <link href="static/styles/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+
     <link rel="stylesheet" type="text/css" href="/static/styles/styles.css">
     <link rel="stylesheet" type="text/css" href="/static/styles/groups_styles.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css">
     {% if path|string() == 'cards' %}
         <link rel="stylesheet" type="text/css" href="/static/styles/cards_styles.css">
     {% elif path|string() == 'test' %}
@@ -16,8 +19,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Montserrat+Alternates&family=Nunito:wght@700&family=Open+Sans&family=Tenor+Sans&display=swap" rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
+    <script src="static/scripts/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
     {% if path|string() == 'cards' %}
         <script src="/static/scripts/cards_functions.js"></script>
     {% elif path|string() == 'test' %}
@@ -25,5 +27,6 @@
     {% elif path|string() == 'groups' %}
         <script src="/static/scripts/groups_funcs.js"></script>
     {% endif %}
-    <script src="static/scripts/inside_defolt.js"></script>
+    <script src="/static/scripts/inside_defolt.js"></script>
+
 </head>

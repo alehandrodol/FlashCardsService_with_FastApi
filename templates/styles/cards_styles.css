@@ -19,7 +19,6 @@
     overflow-x: hidden;
     width: 80%;
     height: 83%;
-
 }
 
 .term_card {
@@ -30,6 +29,20 @@
     display: flex;
     align-items: center;
     flex: 19;
+    cursor: pointer;
+}
+
+.term_card:focus,
+.term_card:hover{
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(96, 54, 122, 0.6);
+}
+
+.odd_term:active{
+    background-color: rgb(236, 236, 236);
+}
+
+.even_term:active {
+    background-color: rgb(229, 208, 242);
 }
 
 .even_term {
@@ -95,6 +108,15 @@ h2 {
     font-family: 'Open Sans', sans-serif;
     margin-top: 0 !important;
     margin-bottom: 0 !important;
+}
+
+#mod-cont-card-id {
+    height: 50vh !important;
+    width: 45vw !important;
+    border: 3px solid #351C45;
+    border-radius: 15px;
+    min-height: 310px;
+    min-width: 460px;
 }
 
 @media (max-height: 801px){

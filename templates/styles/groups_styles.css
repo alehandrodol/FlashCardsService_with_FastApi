@@ -103,6 +103,13 @@ main{
     font-size: calc(18px + 1vh);
 }
 
+#create:focus,
+#create:hover {
+    outline: none;
+    border: 3px solid #EF9452;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(239, 148, 82, 0.6);
+}
+
 #exit {
     font-size: calc(18px + 1vh);
     background-color: #C8A9DC;
@@ -147,8 +154,8 @@ main{
     background-color: #FFCE6D;
     border-radius: 12px;
     flex-shrink: 0;
-    width: calc(7vh*1.25);
-    height: 6.5vh;
+    width: calc(7vh*1.3);
+    height: 6vh;
     min-width: 74px;
     max-width: 50%;
     color: #FFFFFF;
@@ -157,6 +164,13 @@ main{
     align-items: center;
     justify-content: center;
     padding-right: 0.05em;
+}
+
+.delete_card:focus,
+.delete_card:hover {
+    outline: none;
+    border: 3px solid #FFCE6D;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(255, 206, 109, 0.6);
 }
 
 .test_card {
@@ -201,6 +215,15 @@ main{
     padding-left: 0.33em;
 }
 
+.switch_groups:hover,
+.switch_groups:focus,
+.test_card:hover,
+.test_card:focus{
+    outline: none;
+    border: 3px solid #351C45;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(53, 28, 69, 0.6);
+}
+
 #left_but {
     transform: scaleX(-1);
 }
@@ -210,6 +233,102 @@ main{
     width: auto;
     min-height: 95px;
     min-width: 81px;
+}
+
+.modal-content {
+    background-color: #C8A9DC;
+}
+
+.form-control {
+    border: 2px solid #351C45;
+}
+
+.form-control:focus {
+    border: 2px solid #351C45;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(53, 28, 69, 0.6);
+}
+
+.modal-footer button {
+    font-family: 'Nunito', sans-serif;
+    color: #FFFFFF;
+    border-radius: 7px;
+}
+
+.mod-cont-id {
+    height: 35vh !important;
+    width: 45vw !important;
+    border: 3px solid #351C45;
+    border-radius: 15px;
+    min-height: 310px;
+    min-width: 460px;
+}
+
+.modal-content div {
+    border: 0 !important;
+}
+
+.modal-body form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cancel {
+    background-color: #60367A;
+}
+
+.cancel:focus,
+.cancel:hover {
+    color: #FFFFFF;
+    outline: none;
+    border: 2px solid #60367A;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(96, 54, 122, 0.6);
+}
+
+.approve {
+    background-color: #FFCE6D !important;
+}
+
+.approve:hover,
+.approve:focus {
+    color: #FFFFFF;
+    border: 2px solid #FFCE6D;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 206, 109, 0.6);
+}
+
+#cross_exit:focus {
+    outline: none;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(50, 50, 50, 0.6);
+}
+
+.even_card:hover,
+.even_card:focus,
+#exit:hover,
+#exit:focus{
+    outline: none;
+    border: 3px solid #C8A9DC;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(200, 169, 220, 0.6);
+}
+
+.odd_card:hover,
+.odd_card:focus,
+#edit:focus,
+#edit:hover{
+    outline: none;
+    border: 3px solid #FFE4AF;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(255, 228, 175, 0.6);
+}
+
+.odd_card:active,
+#edit:active {
+    background-color: rgb(247, 214, 148);
+}
+
+.even_card:active,
+#exit:active {
+    background-color: rgb(188, 150, 214);
 }
 
 @media (max-width: 1201px){
