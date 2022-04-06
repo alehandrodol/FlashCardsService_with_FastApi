@@ -3,7 +3,7 @@ function edit_button_behav(){
     btn_edit.textContent = "Удалить";
     let btn_create = document.getElementById("create");
     btn_create.textContent = "Отмена";
-    let a = document.getElementsByTagName("label");
+    let a = document.getElementsByClassName("check_label");
     for (let i = 0; i < a.length; i++) {
         a[i].style.display = "inline-flex";
     }
@@ -18,7 +18,7 @@ function rollBack(){
     let btn_edit = document.getElementById('edit');
     btn_edit.textContent = "Редактировать";
     btn_create.textContent = "Создать";
-    let a = document.getElementsByTagName("label");
+    let a = document.getElementsByClassName("check_label");
     for (let i = 0; i < a.length; i++) {
         a[i].style.display = "none";
     }
@@ -29,6 +29,19 @@ function rollBack(){
 }
 
 function rollBack2(){
+    let checkboxes = document.getElementsByClassName("toDelete");
+    let card_list = [];
+    for (let i = 0; i < checkboxes.length; i++){
+        if (checkboxes[i].checked === true){
+            let cur_id = checkboxes[i].id;
+            card_list.push(cur_id);
+        }
+    }
+    for (let i = 0; i < card_list.length; i++){
+        let cur_card = document.getElementById(`card_id_${card_list[i]}`);
+        cur_card.remove();
+    }
+
     console.log("Я типа отправляю запрос на удаление карточек ;)")
     rollBack();
 }
@@ -36,16 +49,18 @@ function rollBack2(){
 function createNewCard(){
     let last_card = document.getElementsByClassName("toDelete");
     last_card = last_card[last_card.length-1]
+    let card_id = (Number(last_card.id)+1)
     let new_card = document.createElement("div");
     new_card.setAttribute("class", "check_and_but")
+    new_card.setAttribute("id", `card_id_${card_id}`)
     let object = document.createElement("input");
     object.setAttribute("type", "checkbox");
     object.setAttribute("class", "toDelete");
-    let card_id = (Number(last_card.id)+1)
     object.setAttribute("id", card_id.toString())
     new_card.append(object);
     object = document.createElement("label");
     object.setAttribute("for", card_id.toString());
+    object.setAttribute("class", "check_label");
     new_card.append(object);
     object = document.createElement("div");
     if (card_id % 2 === 0){

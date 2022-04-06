@@ -36,7 +36,7 @@
                     let new_html = (await fetch("/groups", {
                         method: "GET"
                     })).text();
-                    document.documentElement.innerHTML = (await new_html).toString();
+                    document.documentElement.innerHTML = (await new_html).toString()
                     window.history.pushState({},"", "/groups");
                     rel();
                 }
