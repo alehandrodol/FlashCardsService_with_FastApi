@@ -63,4 +63,9 @@ function edit_button_behav(){
 document.addEventListener("DOMContentLoaded", function() {
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
+    let switcher_l = document.getElementById("left_but");
+    let switcher_r = document.getElementById("right_but");
+    switcher_l.addEventListener("onclick", function (event){
+
+    })
 });

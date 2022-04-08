@@ -1,80 +1,174 @@
 
 <main>
-    <div class="switcher"><button class="switch_groups text-white" id="left_but"><i class="bi bi-play-fill"></i></button></div>
-    <div id="main_groups">
-        <div class="groups_cards">
-            <div class="group_card">
-                <div class="div_card_main"><button class="card_main odd_card" onclick="main_cards()" data-bs-target="#changeGroup"></button></div>
-                <div class="card_buttons">
-                    <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
-                    <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+    <div class="switcher"><button class="switch_groups text-white carousel-control-prev" id="left_but" type="button" data-bs-target="#carouselWithCards" data-bs-slide="prev"><i class="bi bi-play-fill"></i></button></div>
+    <div class="pseudo_main">
+        <div id="carouselWithCards" class="carousel slide" data-bs-ride="carousel" data-bs-interval="false">
+            <div class="carousel-inner d-flex flex-row justify-content-between">
+                <div class="carousel-item active">
+                    <div class="groups_cards d-flex">
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main odd_card" onclick="main_cards()" data-bs-target="#changeGroup">1</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main even_card" onclick="main_cards()" data-bs-target="#changeGroup">2</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main odd_card" onclick="main_cards()" data-bs-target="#changeGroup">3</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main even_card" onclick="main_cards()" data-bs-target="#changeGroup">4</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="group_card">
-                <div class="div_card_main"><button class="card_main even_card" onclick="main_cards()" data-bs-target="#changeGroup"></button></div>
-                <div class="card_buttons">
-                    <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
-                    <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                <div class="carousel-item">
+                    <div class="groups_cards d-flex">
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main odd_card" onclick="main_cards()" data-bs-target="#changeGroup">5</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main even_card" onclick="main_cards()" data-bs-target="#changeGroup">6</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main odd_card" onclick="main_cards()" data-bs-target="#changeGroup">7</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main even_card" onclick="main_cards()" data-bs-target="#changeGroup">8</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <div class="group_card">
-                <div class="div_card_main"><button class="card_main odd_card" onclick="main_cards()" data-bs-target="#changeGroup"></button></div>
-                <div class="card_buttons">
-                    <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
-                    <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
-                </div>
-            </div>
-            <div class="group_card">
-                <div class="div_card_main"><button class="card_main even_card" onclick="main_cards()" data-bs-target="#changeGroup"></button></div>
-                <div class="card_buttons">
-                    <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
-                    <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                <div class="carousel-item">
+                    <div class="groups_cards d-flex">
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main odd_card" onclick="main_cards()" data-bs-target="#changeGroup">9</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main even_card" onclick="main_cards()" data-bs-target="#changeGroup">10</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main odd_card" onclick="main_cards()" data-bs-target="#changeGroup">11</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                        <div class="group_card">
+                            <div class="div_card_main">
+                                <button class="card_main even_card" onclick="main_cards()" data-bs-target="#changeGroup">12</button>
+                            </div>
+                            <div class="card_buttons">
+                                <div class="delete_card card_but"><i class="bi bi-x-lg"></i></div>
+                                <div class="test_card card_but text-white" onclick="start_test()"><i class="bi bi-play-fill"></i></div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
         {% include 'create-edit-buttons.html' %}
-        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content align-items-center mod-cont-id">
-                  <div class="modal-header d-flex justify-content-center mt-3">
-                    <h5 class="modal-title fs-2" id="exampleModalLabel">Создать новую группу</h5>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content align-items-center mod-cont-id">
+              <div class="modal-header d-flex justify-content-center mt-3">
+                <h5 class="modal-title fs-2" id="exampleModalLabel">Создать новую группу</h5>
+              </div>
+              <div class="modal-body d-flex justify-content-center align-content-center w-100 mb-3">
+                <form>
+                  <div class=" w-75">
+                    <label for="recipient-name" class="col-form-label text-white fs-4">Название группы</label>
+                    <input type="text" class="form-control fs-4" id="recipient-name">
                   </div>
-                  <div class="modal-body d-flex justify-content-center align-content-center w-100 mb-3">
-                    <form>
-                      <div class=" w-75">
-                        <label for="recipient-name" class="col-form-label text-white fs-4">Название группы</label>
-                        <input type="text" class="form-control fs-4" id="recipient-name">
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer w-75 d-flex flex- justify-content-between align-items-center mb-5">
-                    <button type="button" class="btn me-3 fs-4 cancel" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn ms-3 fs-4 approve">Создать</button>
-                  </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" id="changeGroup" tabindex="-1" role="dialog" aria-labelledby="changeGroupLabel" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content align-items-center mod-cont-id">
-                  <div class="modal-header d-flex justify-content-center mt-3">
-                    <h5 class="modal-title fs-2" id="changeGroupLabel">Изменить название группы</h5>
-                  </div>
-                  <div class="modal-body d-flex justify-content-center align-content-center w-100 mb-3">
-                    <form>
-                      <div class=" w-75">
-                        <label for="new-group-name" class="col-form-label text-white fs-4">Новое название</label>
-                        <input type="text" class="form-control fs-4" id="new-group-name">
-                      </div>
-                    </form>
-                  </div>
-                  <div class="modal-footer w-75 d-flex flex- justify-content-between align-items-center mb-5">
-                    <button type="button" class="btn me-3 fs-4 cancel" data-bs-dismiss="modal">Отмена</button>
-                    <button type="button" class="btn ms-3 fs-4 approve">Создать</button>
-                  </div>
-                </div>
+                </form>
+              </div>
+              <div class="modal-footer w-75 d-flex flex-row justify-content-between align-items-end mb-5">
+                <button type="button" class="btn me-3 fs-4 cancel" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn ms-3 fs-4 approve">Создать</button>
+              </div>
             </div>
         </div>
     </div>
-    <div class="switcher"><button class="switch_groups text-white" id="right_but"><i class="bi bi-play-fill"></i></button></div>
+    <div class="modal fade" id="changeGroup" tabindex="-1" role="dialog" aria-labelledby="changeGroupLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content align-items-center mod-cont-id">
+              <div class="modal-header d-flex justify-content-center mt-3">
+                <h5 class="modal-title fs-2" id="changeGroupLabel">Изменить название группы</h5>
+              </div>
+              <div class="modal-body d-flex justify-content-center align-content-center w-100 mb-3">
+                <form>
+                  <div class=" w-75">
+                    <label for="new-group-name" class="col-form-label text-white fs-4">Новое название</label>
+                    <input type="text" class="form-control fs-4" id="new-group-name">
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer w-75 d-flex flex- justify-content-between align-items-center mb-5">
+                <button type="button" class="btn me-3 fs-4 cancel" data-bs-dismiss="modal">Отмена</button>
+                <button type="button" class="btn ms-3 fs-4 approve">Создать</button>
+              </div>
+            </div>
+        </div>
+    </div>
+    <div class="switcher"><button class="switch_groups text-white carousel-control-next" id="right_but"  type="button" data-bs-target="#carouselWithCards" data-bs-slide="next"><i class="bi bi-play-fill"></i></button></div>
 </main>

@@ -7,6 +7,23 @@ header{
     flex: 2;
 }
 
+.pseudo_main {
+    flex: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+}
+#carouselWithCards {
+    width: 100%;
+    flex: 5 !important;
+}
+
+.carousel-inner {
+    height: 100% !important;
+}
+
+
 main{
     width: 100%;
     flex: 7;
@@ -33,11 +50,9 @@ main{
 }
 
 .groups_cards {
-    display: flex;
     flex-direction: row;
-    flex: 5;
     justify-content: space-between;
-    width: 100%;
+    height: 100%;
     align-items: center;
 }
 
@@ -61,7 +76,7 @@ main{
     flex-direction: column;
     align-items: center;
     width: 100%;
-
+    font-size: 75px;
 }
 
 .card_main {
@@ -203,16 +218,18 @@ main{
 }
 
 .switch_groups {
+    position: unset !important;
     border-radius: 50%;
     border-width: 0;
-    background-color: #351C45;
+    background-color: #351C45 !important;
     font-size: 2.5em;
     width: 8vh;
     flex-shrink: 0;
     height: 8vh;
     min-width: 58px;
     min-height: 58px;
-    padding-left: 0.33em;
+    padding-left: 0.2em;
+    opacity: 1 !important;
 }
 
 .switch_groups:hover,
@@ -246,6 +263,14 @@ main{
 .form-control:focus {
     border: 2px solid #351C45;
     box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(53, 28, 69, 0.6);
+}
+
+.modal-footer {
+    padding-top: 0 !important;
+}
+
+.modal-body {
+    padding-top: 0 !important;
 }
 
 .modal-footer button {
