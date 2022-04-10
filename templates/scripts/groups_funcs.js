@@ -60,7 +60,7 @@ function edit_button_behav(){
     btn_edit.setAttribute("onclick", "editButSecond()")
 }
 
-function deleteGroup(event){
+async function deleteGroup(event){
     let old_id = ""
     try{
         old_id = event.target.getAttribute("data-id").toString();
@@ -72,6 +72,17 @@ function deleteGroup(event){
     }
 
     let group_card = document.getElementById(old_id);
+    let group_data_id = group_card.getElementsByClassName("group_card")[0].getAttribute("data-id").toString()
+    let response = await fetch(`/group/delete_group?group_id=${group_data_id}`, {
+        method: "POST",
+        headers: {
+            "accept": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    })
+    if (response.status !== 200){
+        return
+    }
     group_card.remove();
     let items_list = document.getElementsByClassName("groups_cards");
     if (items_list[items_list.length-1].getElementsByClassName("group_card").length === 0){
@@ -125,23 +136,12 @@ function deleteGroup(event){
             }
         }
     }
-    console.log("Я типа отправляю запрос на удаление группы")
 }
 
-function createGroup(){
-    let list_cards = document.getElementsByClassName("group_card");
-    let new_id = list_cards.length + 1;
-    let carItem = document.getElementsByClassName("carousel-item");
-    carItem = carItem[carItem.length-1];
-    if (list_cards.length % 4 === 0){
-        carItem = createCarouselItem(list_cards.length+1);
-    }
-
-
-
+function createGroupHTML(inside, new_id, data_id){
     let new_group_card = document.createElement("div");
     new_group_card.setAttribute("class", "group_card");
-
+    new_group_card.setAttribute("data-id", `${data_id}`)
 
     let object = document.createElement("div");
     object.setAttribute("class", "div_card_main");
@@ -156,8 +156,7 @@ function createGroup(){
     butt.setAttribute("class",`card_main ${odd_even}`);
     butt.setAttribute("onclick", "main_cards()");
     butt.setAttribute("data-bs-target", "#changeGroup");
-    let text = document.getElementById("recipient-name").value;
-    butt.innerText = text.toString();
+    butt.innerText = inside;
     object.append(butt);
     new_group_card.append(object)
 
@@ -183,12 +182,31 @@ function createGroup(){
     icon.setAttribute("class", "bi bi-play-fill");
     butt.append(icon)
     object.append(butt)
-
     new_group_card.append(object);
+    return new_group_card
+}
+
+async function createGroup(){
+    let text = document.getElementById("recipient-name").value.toString();
+    let response = await fetch("/group/create_group", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: `{"name" : "${text}"}`
+    });
+    let data = JSON.parse(await response.json())
+    let list_cards = document.getElementsByClassName("group_card");    let new_id = list_cards.length + 1;
+    let carItem = document.getElementsByClassName("carousel-item");
+    carItem = carItem[carItem.length-1];
+    if (list_cards.length % 4 === 0){
+        carItem = createCarouselItem(list_cards.length+1);
+    }
+
+    let new_group_card = createGroupHTML(text, new_id, data.group_id)
     let container = carItem.getElementsByClassName("group_card_container");
     container[(new_id-1) % 4].append(new_group_card)
-
-    console.log("Я типа отправляю запрос на создание группы ))")
 }
 
 function createCarouselItem(id_start){
@@ -213,7 +231,7 @@ function createCarouselItem(id_start){
     return new_item
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+function onload_groups(){
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
 
@@ -227,4 +245,38 @@ document.addEventListener("DOMContentLoaded", function() {
             deleteGroup(event);
         }
     }
+}
+
+async function group_content(){
+    let groups_data = (await fetch("/group/groups", {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    }))
+    if (groups_data.status === 200){
+        groups_data = JSON.parse((await groups_data.text()).toString())
+
+        let inner = document.getElementById("innerCar");
+        let car_item = document.createElement("div")
+        for (let i = 0; i < groups_data.length; i++){
+            if (i % 4 === 0){
+                if (i !== 0){
+                    inner.append(car_item);
+                }
+                car_item = createCarouselItem(i+1);
+            }
+            let group_card = createGroupHTML(groups_data[i]["name"], i+1, groups_data[i]["id"]);
+            let cont = car_item.getElementsByClassName("group_card_container")[i % 4];
+            cont.append(group_card);
+        }
+        inner.append(car_item);
+        onload_groups();
+
+
+    }
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+    await group_content();
 });

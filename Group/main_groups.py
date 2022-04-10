@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi.responses import JSONResponse
 
 from typing import List
+from json import dumps
 
 from sqlalchemy.orm import Session
 
@@ -20,7 +22,7 @@ from .service_funcs import add_and_refresh_db, check_group, get_cards_in_group_s
 router = APIRouter()
 
 
-@router.post("/create_group")
+@router.post("/create_group", response_class=JSONResponse)
 async def create_group(group: GroupCreate,
                        current_user: User = Depends(get_current_user),
                        db: Session = Depends(get_db)):
@@ -31,7 +33,8 @@ async def create_group(group: GroupCreate,
         user_id=current_user.id
     )
     add_and_refresh_db(db_group, db)
-    return status.HTTP_200_OK
+    new_id = db.query(Group).filter(Group.user_id == current_user.id).order_by(Group.id.desc()).first().id
+    return dumps({"status": 200, "group_id": new_id})
 
 
 @router.get("/groups")

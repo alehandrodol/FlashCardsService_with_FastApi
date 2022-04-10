@@ -11,51 +11,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Montserrat+Alternates&family=Nunito:wght@700&family=Open+Sans&family=Tenor+Sans&display=swap" rel="stylesheet">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link href="/static/styles/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 
-    <script>
-        function rel(){
-            location.reload();
-        }
-
-        document.addEventListener("DOMContentLoaded", function() {
-            let btn = document.querySelector('input[id=enter]');
-            btn.addEventListener('click', async function (event) {
-                event.preventDefault();
-                let response = await fetch("/token", {
-                    method: "POST",
-                    body: new FormData(document.querySelector("form"))
-                })
-                if (response.status === 403){
-                    let wrong_div = document.querySelector("#WrongUser");
-                    wrong_div.style.display = "block";
-                }
-                if (response.status === 200){
-                    let data = await response.json()
-                    localStorage.setItem('token', data.access_token);
-                    let new_html = (await fetch("/groups", {
-                        method: "GET"
-                    })).text();
-                    document.documentElement.innerHTML = (await new_html).toString()
-                    window.history.pushState({},"", "/groups");
-                    rel();
-                }
-            })
-            let btn2 = document.querySelector('input[id=register_but]');
-            btn2.addEventListener('click', async function (event) {
-                event.preventDefault()
-                let response = await fetch("/user/register", {
-                    method: "POST",
-                    body: new FormData(document.querySelector("form"))
-                })
-                if (response.status === 200)
-                    alert("Успешно!");
-                else
-                    alert("Упс, произошла ошибка")
-            });
-        });
-
-    </script>
+    <script src="/static/scripts/auth.js"></script>
 </head>
 <body id="main_body">
     <header>

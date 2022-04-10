@@ -31,8 +31,12 @@ function rollBack(){
 function rollBack2(){
     let checkboxes = document.getElementsByClassName("toDelete");
     let card_list = [];
+    let first_id = null;
     for (let i = 0; i < checkboxes.length; i++){
         if (checkboxes[i].checked === true){
+            if (first_id === null){
+                first_id = checkboxes[i].id;
+            }
             let cur_id = checkboxes[i].id;
             card_list.push(cur_id);
         }
@@ -42,6 +46,19 @@ function rollBack2(){
         cur_card.remove();
     }
 
+    let cab = document.getElementsByClassName("check_and_but");
+    for (let i = first_id - 1; i < cab.length; i++){
+        cab[i].setAttribute("id", `card_id_${(i+1).toString()}`);
+        cab[i].getElementsByClassName("toDelete")[0].setAttribute("id", `${(i+1).toString()}`)
+        cab[i].getElementsByClassName("check_label")[0].setAttribute("for", `${(i+1).toString()}`)
+        let term_card = cab[i].getElementsByClassName("term_card")[0];
+        let odd_even = "odd_term"
+        if ((i+1) % 2 === 0){
+            odd_even = "even_term"
+        }
+        term_card.setAttribute("class", `term_card ${odd_even}`);
+    }
+
     console.log("Я типа отправляю запрос на удаление карточек ;)")
     rollBack();
 }
@@ -49,7 +66,16 @@ function rollBack2(){
 function createNewCard(){
     let last_card = document.getElementsByClassName("toDelete");
     last_card = last_card[last_card.length-1]
-    let card_id = (Number(last_card.id)+1)
+    let card_id = -1
+    try {
+        card_id = (Number(last_card.id)+1)
+    }
+    catch (e) {
+        if (e.name.toString() === "TypeError"){
+            card_id = 1
+        }
+    }
+
     let new_card = document.createElement("div");
     new_card.setAttribute("class", "check_and_but")
     new_card.setAttribute("id", `card_id_${card_id}`)
