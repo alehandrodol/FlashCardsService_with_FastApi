@@ -42,7 +42,7 @@ async def get_groups(current_user: User = Depends(get_current_user),
                      db: Session = Depends(get_db)) -> List[Group]:
     if not current_user:
         return status.HTTP_401_UNAUTHORIZED
-    return db.query(Group).filter(Group.user_id == current_user.id).all()
+    return db.query(Group).filter(Group.user_id == current_user.id).order_by(Group.id).all()
 
 
 @router.get("/cards_in/{group_id}")

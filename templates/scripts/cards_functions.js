@@ -28,9 +28,10 @@ function rollBack(){
     btn_edit.setAttribute("onclick", "edit_button_behav()")
 }
 
-function rollBack2(){
+async function rollBack2(){
     let checkboxes = document.getElementsByClassName("toDelete");
     let card_list = [];
+    let back_id_list = [];
     let first_id = null;
     for (let i = 0; i < checkboxes.length; i++){
         if (checkboxes[i].checked === true){
@@ -39,6 +40,7 @@ function rollBack2(){
             }
             let cur_id = checkboxes[i].id;
             card_list.push(cur_id);
+            back_id_list.push(checkboxes[i].parentElement.getAttribute("data-id"));
         }
     }
     for (let i = 0; i < card_list.length; i++){
@@ -47,35 +49,31 @@ function rollBack2(){
     }
 
     let cab = document.getElementsByClassName("check_and_but");
-    for (let i = first_id - 1; i < cab.length; i++){
-        cab[i].setAttribute("id", `card_id_${(i+1).toString()}`);
-        cab[i].getElementsByClassName("toDelete")[0].setAttribute("id", `${(i+1).toString()}`)
-        cab[i].getElementsByClassName("check_label")[0].setAttribute("for", `${(i+1).toString()}`)
-        let term_card = cab[i].getElementsByClassName("term_card")[0];
-        let odd_even = "odd_term"
-        if ((i+1) % 2 === 0){
-            odd_even = "even_term"
+    if (first_id !== null){
+        for (let i = first_id - 1; i < cab.length; i++){
+            cab[i].setAttribute("id", `card_id_${(i+1).toString()}`);
+            cab[i].getElementsByClassName("toDelete")[0].setAttribute("id", `${(i+1).toString()}`)
+            cab[i].getElementsByClassName("check_label")[0].setAttribute("for", `${(i+1).toString()}`)
+            let term_card = cab[i].getElementsByClassName("term_card")[0];
+            let odd_even = "odd_term"
+            if ((i+1) % 2 === 0){
+                odd_even = "even_term"
+            }
+            term_card.setAttribute("class", `term_card ${odd_even}`);
         }
-        term_card.setAttribute("class", `term_card ${odd_even}`);
+        let response = await fetch("cards/delete_cards", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+            body: JSON.stringify(back_id_list)
+        })
     }
-
-    console.log("Я типа отправляю запрос на удаление карточек ;)")
     rollBack();
 }
 
-function createNewCard(){
-    let last_card = document.getElementsByClassName("toDelete");
-    last_card = last_card[last_card.length-1]
-    let card_id = -1
-    try {
-        card_id = (Number(last_card.id)+1)
-    }
-    catch (e) {
-        if (e.name.toString() === "TypeError"){
-            card_id = 1
-        }
-    }
-
+function createCardHTML(card_id, text){
     let new_card = document.createElement("div");
     new_card.setAttribute("class", "check_and_but")
     new_card.setAttribute("id", `card_id_${card_id}`)
@@ -96,15 +94,73 @@ function createNewCard(){
         object.setAttribute("class", "term_card odd_term");
     }
     let h = document.createElement("h2");
-    h.innerText = document.getElementById("front-card").value;
+    h.innerText = text;
     object.append(h);
     new_card.append(object);
-    let cards = document.getElementById("cards_container");
-    cards.append(new_card);
-    console.log("Типа отправляю запрос на создание карты!")
+    return new_card
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+async function createNewCard(){
+    let last_card = document.getElementsByClassName("toDelete");
+    last_card = last_card[last_card.length-1]
+    let card_id = -1
+    try {
+        card_id = (Number(last_card.id)+1)
+    }
+    catch (e) {
+        if (e.name.toString() === "TypeError"){
+            card_id = 1
+        }
+    }
+    let front_text = document.getElementById("front-card").value;
+    let back_text = document.getElementById("back-card").value;
+
+    let response = await fetch("/cards/create_card", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify({
+            "front": front_text,
+            "back": back_text,
+            "group_id": localStorage.getItem("group_id")
+        })
+    })
+    if (response.status === 200){
+        let resp_data = JSON.parse(await response.json())
+        let new_card = createCardHTML(card_id, front_text);
+        new_card.setAttribute("data-id", resp_data.card_id)
+        let cards = document.getElementById("cards_container");
+        cards.append(new_card);
+    }
+}
+
+async function cards_data(group_id){
+    let response = (await fetch(`/group/cards_in/${group_id.toString()}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    }))
+    if (response.status === 200){
+        let list_cards = JSON.parse((await response.text()).toString())
+        let cont = document.getElementById("cards_container");
+        for (let i = 0; i < list_cards.length; i++){
+            let new_card = createCardHTML(i+1, list_cards[i].front);
+            new_card.setAttribute("data-id", `${list_cards[i].id}`)
+            cont.append(new_card);
+        }
+        onload_cards();
+    }
+}
+
+function onload_cards(){
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
+}
+
+document.addEventListener("DOMContentLoaded", async function() {
+    let cur_id = localStorage.getItem("group_id");
+    await cards_data(cur_id);
 });

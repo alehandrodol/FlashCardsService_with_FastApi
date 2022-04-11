@@ -1,11 +1,12 @@
-async function main_cards(){
+async function main_cards(back_id){
     let response = await fetch("/cards", {
             method: "GET"
         });
         if (response.status === 200){
+            localStorage.setItem("group_id", `${back_id.toString()}`)
             document.documentElement.innerHTML = (await ((await response).text())).toString()
             window.history.pushState({},"", "/cards");
-            location.reload();
+            rel();
         }
 }
 
@@ -14,9 +15,11 @@ async function start_test(){
             method: "GET"
         });
         if (response.status === 200){
-            document.documentElement.innerHTML = (await ((await response).text())).toString()
+            requestAnimationFrame(async () => { // TODO
+                document.documentElement.innerHTML = (await ((await response).text())).toString()
+            })
             window.history.pushState({},"", "/testing");
-            location.reload();
+            rel();
         }
 }
 
@@ -26,7 +29,8 @@ function changeFuncs(){
     let a = document.getElementsByClassName("card_main");
     for (let i = 0; i < a.length; i++) {
         a[i].removeAttribute("data-bs-toggle");
-        a[i].setAttribute("onclick", "main_cards()");
+        let data_id = a[i].parentElement.parentElement.getAttribute("data-id"); //TODO test this string
+        a[i].onclick = function () {main_cards(data_id)}
     }
     btn_create.removeAttribute("onclick");
     btn_create.setAttribute('data-bs-toggle', "modal");
@@ -50,7 +54,12 @@ function edit_button_behav(){
     btn_create.textContent = "Отмена";
     let a = document.getElementsByClassName("card_main");
     for (let i = 0; i < a.length; i++) {
-        a[i].removeAttribute("onclick");
+        a[i].onclick = function (event) {
+            let curID = event.target.parentElement.parentElement.parentElement.id
+            localStorage.setItem("currentChangingGroup", `${curID}`);
+            let curBackID = event.target.parentElement.parentElement.getAttribute("data-id").toString();
+            localStorage.setItem("currentBackGroup", `${curBackID}`);
+        }
         a[i].setAttribute("data-bs-toggle", "modal");
     }
 
@@ -154,7 +163,7 @@ function createGroupHTML(inside, new_id, data_id){
         odd_even = "odd_card"
     }
     butt.setAttribute("class",`card_main ${odd_even}`);
-    butt.setAttribute("onclick", "main_cards()");
+    butt.onclick = function () {main_cards(data_id)}
     butt.setAttribute("data-bs-target", "#changeGroup");
     butt.innerText = inside;
     object.append(butt);
@@ -231,6 +240,22 @@ function createCarouselItem(id_start){
     return new_item
 }
 
+async function changeNameGroup(){
+    let text = document.getElementById("new-group-name").value
+    let response = await fetch(`/group/edit_group?group_id=${localStorage.getItem("currentBackGroup")}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: JSON.stringify({"name": text})
+    })
+    if (response.status === 200){
+        let curGroup = document.getElementById(`${localStorage.getItem("currentChangingGroup")}`)
+        curGroup.firstChild.firstChild.firstChild.innerText = text
+    }
+}
+
 function onload_groups(){
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
@@ -239,6 +264,14 @@ function onload_groups(){
     let createGroupBut = myMod.getElementsByClassName("approve");
     createGroupBut = createGroupBut[createGroupBut.length-1];
     createGroupBut.setAttribute("onclick", "createGroup()");
+
+    let changeGroupMod = document.getElementById("changeGroup");
+    let changeNameBut = changeGroupMod.getElementsByClassName("approve");
+    changeNameBut = changeNameBut[0]
+    changeNameBut.onclick = async function (){
+        await changeNameGroup()
+    }
+
     let delete_buts = document.getElementsByClassName("delete_card")
     for (let i = 0; i < delete_buts.length; i++){
         delete_buts[i].onclick = function (event) {

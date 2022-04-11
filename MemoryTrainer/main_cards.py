@@ -1,6 +1,7 @@
 from datetime import datetime
 
 from fastapi import APIRouter, Depends, status, HTTPException, Response, Cookie
+from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
 from typing import List, Dict, Optional
@@ -33,7 +34,7 @@ router = APIRouter()
     return"""
 
 
-@router.post("/create_card")
+@router.post("/create_card", response_class=JSONResponse)
 async def create_card(card: CardCreate,
                       response: Response,
                       current_user: User = Depends(get_current_user),
@@ -53,7 +54,8 @@ async def create_card(card: CardCreate,
     )
     add_and_refresh_db(db_card, db)
     response.set_cookie(key="card_dict", value=dumps(card_dict))
-    return status.HTTP_200_OK
+    new_id = db.query(Card).filter(Card.group_id == card.group_id).order_by(Card.id.desc()).first().id
+    return dumps({"status": 200, "card_id": new_id})
 
 
 @router.get("/next/{group_id}")

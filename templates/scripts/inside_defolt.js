@@ -19,8 +19,7 @@ async function back_to_groups(){
         method: "GET"
     });
     if (response.status === 200){
-        let html = (await ((await response).text())).toString()
-        document.documentElement.innerHTML = html
+        document.documentElement.innerHTML = (await ((await response).text())).toString()
         window.history.pushState({},"", "/groups");
         rel();
     }
