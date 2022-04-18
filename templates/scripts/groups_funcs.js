@@ -1,11 +1,11 @@
-async function main_cards(back_id){
-    let response = await fetch("/cards", {
+async function main_cards(back_id, group_name){
+    let response = await fetch(`/cards?group_name=${group_name}`, {
             method: "GET"
         });
         if (response.status === 200){
             localStorage.setItem("group_id", `${back_id.toString()}`)
             document.documentElement.innerHTML = (await ((await response).text())).toString()
-            window.history.pushState({},"", "/cards");
+            window.history.pushState({},"", `/cards?group_name=${group_name}`);
             rel();
         }
 }
@@ -15,9 +15,7 @@ async function start_test(){
             method: "GET"
         });
         if (response.status === 200){
-            requestAnimationFrame(async () => { // TODO
-                document.documentElement.innerHTML = (await ((await response).text())).toString()
-            })
+            document.documentElement.innerHTML = (await ((await response).text())).toString()
             window.history.pushState({},"", "/testing");
             rel();
         }
@@ -29,8 +27,8 @@ function changeFuncs(){
     let a = document.getElementsByClassName("card_main");
     for (let i = 0; i < a.length; i++) {
         a[i].removeAttribute("data-bs-toggle");
-        let data_id = a[i].parentElement.parentElement.getAttribute("data-id"); //TODO test this string
-        a[i].onclick = function () {main_cards(data_id)}
+        let data_id = a[i].parentElement.parentElement.getAttribute("data-id");
+        a[i].onclick = function () {main_cards(data_id, a[i].innerText)}
     }
     btn_create.removeAttribute("onclick");
     btn_create.setAttribute('data-bs-toggle', "modal");
@@ -162,8 +160,8 @@ function createGroupHTML(inside, new_id, data_id){
     else{
         odd_even = "odd_card"
     }
-    butt.setAttribute("class",`card_main ${odd_even}`);
-    butt.onclick = function () {main_cards(data_id)}
+    butt.setAttribute("class",`card_main ${odd_even} text-truncate`); //TODO make overflow inner text
+    butt.onclick = function () {main_cards(data_id, inside)}
     butt.setAttribute("data-bs-target", "#changeGroup");
     butt.innerText = inside;
     object.append(butt);

@@ -58,6 +58,24 @@ async def create_card(card: CardCreate,
     return dumps({"status": 200, "card_id": new_id})
 
 
+@router.get("/get_card", response_model=CardShow)
+async def get_card(given_id: int,
+                   current_user: User = Depends(get_current_user),
+                   db: Session = Depends(get_db)):
+    card: Card = db.query(Card).filter(Card.id == given_id).first()
+
+    if not check_group(group_id=card.group_id, current_user=current_user, db=db):
+        raise HTTPException(status_code=400, detail=f"You don't have card with {given_id} ID")
+
+    res_card: CardShow = CardShow(
+        front=card.front,
+        back=card.back,
+        id=card.id,
+        group_id=card.group_id
+    )
+    return res_card
+
+
 @router.get("/next/{group_id}")
 async def get_next_card(group_id: int,
                         response: Response,

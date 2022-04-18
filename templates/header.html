@@ -1,7 +1,7 @@
 <body id="main_body">
     <header>
         <img src="/static/resources/bread.png" id="logo" alt="bread_logo">
-        <h1 id="page_name">{{ title }}</h1>
+        <h1 class="text-truncate" id="page_name">{{ title }}</h1>
         {% if path|string() == 'cards' %}
             <button type="button" class="btn-close btn-lg" onclick="back_to_groups()" id="cross_exit"></button>
         {% elif path|string() == 'groups' %}

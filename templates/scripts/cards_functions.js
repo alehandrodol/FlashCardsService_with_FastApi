@@ -73,6 +73,24 @@ async function rollBack2(){
     rollBack();
 }
 
+async function cardFiller(card_id){
+    let modal_card = document.getElementById("cardModal");
+    let textarea = modal_card.getElementsByClassName("front_card")[0];
+    let response = await fetch(`cards/get_card?given_id=${card_id}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    })
+    let title = modal_card.getElementsByClassName("modal-title")[0];
+    title.innerText = document.getElementById("page_name").innerText
+    response = JSON.parse((await response.text()).toString())
+    console.log(response.front)
+    textarea.innerText = response.front.toString();
+    textarea = modal_card.getElementsByClassName("back_card")[0];
+    textarea.innerText = response.back;
+}
+
 function createCardHTML(card_id, text){
     let new_card = document.createElement("div");
     new_card.setAttribute("class", "check_and_but")
@@ -87,6 +105,12 @@ function createCardHTML(card_id, text){
     object.setAttribute("class", "check_label");
     new_card.append(object);
     object = document.createElement("div");
+    object.onclick = async function (event) {
+        let card_back_id = event.target.parentElement.getAttribute("data-id")
+        await cardFiller(card_back_id);
+    }
+    object.setAttribute("data-bs-target", "#cardModal");
+    object.setAttribute("data-bs-toggle", "modal")
     if (card_id % 2 === 0){
         object.setAttribute("class", "term_card even_term");
     }

@@ -111,12 +111,38 @@ h2 {
 }
 
 #mod-cont-card-id {
-    height: 50vh !important;
-    width: 45vw !important;
     border: 3px solid #351C45;
     border-radius: 15px;
-    min-height: 310px;
-    min-width: 460px;
+    min-height: 310px !important;
+    min-width: 460px !important;
+}
+
+#exampleModalLabel {
+    color: #351C45;
+    font-size: calc(25px + 2vw);
+}
+
+.my-mod-footer button {
+    font-family: 'Nunito', sans-serif;
+    color: #FFFFFF;
+    border-radius: 7px;
+}
+
+.input-group-text {
+    padding-left: 0 !important;
+    background-color: transparent;
+    border: 0;
+    border-radius: 2px !important;
+}
+
+.input-group textarea {
+    margin-left: 0 !important;
+}
+
+.card_description {
+    background-color: #FFFFFF;
+    min-height: 45vh;
+    font-size: calc(10px + 1.5vh);
 }
 
 @media (max-height: 801px){

@@ -1,0 +1,27 @@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen" role="document">
+        <div class="modal-content align-items-center" id="mod-cont-card-id">
+          <div class="modal-header d-flex justify-content-center mt-3">
+            <h1 class="modal-title" id="exampleModalLabel">Создать новую карточку</h1>
+          </div>
+          <div class="modal-body d-flex flex-column justify-content-between align-items-center w-100 mb-3">
+              <form>
+                  <div class="d-flex flex-column justify-content-between w-75">
+                      <label for="front-card" class="col-form-label text-white fs-4">Слово/Вопрос</label>
+                      <input type="text" class="form-control mb-3 fs-4" id="front-card">
+                      <label for="back-card" class="col-form-label text-white fs-4">Значение/Ответ</label>
+                      <input type="text" class="form-control fs-4" id="back-card">
+                      <div class="input-group flex-column">
+                          <span class="input-group-text mt-4 text-white fs-4">Развёрнутое описание карточки</span>
+                          <textarea class="form-control w-100" aria-label="With textarea"></textarea>
+                      </div>
+                  </div>
+              </form>
+              <div class="my-mod-footer w-75 d-flex justify-content-between align-items-center mt-4">
+                  <button type="button" class="btn me-3 fs-4 cancel" data-bs-dismiss="modal">Отмена</button>
+                  <button type="button" class="btn ms-3 fs-4 approve" onclick="createNewCard()" data-bs-dismiss="modal">Создать</button>
+              </div>
+          </div>
+        </div>
+    </div>
+</div>

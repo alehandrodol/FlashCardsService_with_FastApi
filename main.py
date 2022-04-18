@@ -17,6 +17,8 @@ from User.user_manager import authenticate_user, get_current_user
 from User.schemas import Token
 from User.models import User
 
+from Group.models import Group
+
 from core.Base import Base
 from core.database import engine, get_db, SessionLocal
 
@@ -56,8 +58,8 @@ def get_logged(request: Request):
 
 
 @app.get("/cards", response_class=HTMLResponse)
-def get_logged(request: Request):
-    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "cards", "title": "Список карт"})
+def get_logged(request: Request, group_name: str):
+    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "cards", "title": f"{group_name}"})
 
 
 @app.get("/testing", response_class=HTMLResponse)
