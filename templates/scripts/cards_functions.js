@@ -3,10 +3,28 @@ function edit_button_behav(){
     btn_edit.textContent = "Удалить";
     let btn_create = document.getElementById("create");
     btn_create.textContent = "Отмена";
-    let a = document.getElementsByClassName("check_label");
+    let a = document.getElementsByClassName("check_and_but");
     for (let i = 0; i < a.length; i++) {
-        a[i].style.display = "inline-flex";
+        a[i].children[1].style.display = "inline-flex";
+        a[i].children[2].setAttribute("data-bs-target", "#myModal")
+        a[i].children[2].onclick = async function (event) {
+            let card_back_id = event.target.parentElement.getAttribute("data-id")
+            if (card_back_id === null){
+                card_back_id = event.target.parentElement.parentElement.getAttribute("data-id")
+            }
+            localStorage.setItem("curBackIdCard", card_back_id);
+            localStorage.setItem("curFrontIdCard", a[i].children[0].id)
+            await cardFiller(card_back_id, "myModal");
+        }
     }
+
+    let cardMod = document.getElementById("myModal");
+    let appr_but = cardMod.getElementsByClassName("approve")[0];
+    appr_but.innerText = "Сохранить";
+    appr_but.onclick = async function () {
+        await editCard();
+    }
+
     btn_create.removeAttribute('data-bs-toggle')
     btn_create.setAttribute("onclick", "rollBack()")
     btn_edit.removeAttribute("onclick");
@@ -18,10 +36,28 @@ function rollBack(){
     let btn_edit = document.getElementById('edit');
     btn_edit.textContent = "Редактировать";
     btn_create.textContent = "Создать";
-    let a = document.getElementsByClassName("check_label");
+    let a = document.getElementsByClassName("check_and_but");
     for (let i = 0; i < a.length; i++) {
-        a[i].style.display = "none";
+        a[i].children[0].checked = false;
+        a[i].children[1].style.display = "none";
+        a[i].children[2].setAttribute("data-bs-target", "#cardModal")
+        a[i].children[2].onclick = async function (event) {
+            let card_back_id = event.target.parentElement.getAttribute("data-id")
+            if (card_back_id === null){
+                card_back_id = event.target.parentElement.parentElement.getAttribute("data-id")
+            }
+            await cardFiller(card_back_id, "cardModal");
+        }
     }
+
+    let cardMod = document.getElementById("myModal");
+    let appr_but = cardMod.getElementsByClassName("approve")[0];
+    appr_but.innerText = "Создать";
+    appr_but.onclick = async function () {
+        await createNewCard();
+    }
+    localStorage.removeItem("curFrontIdCard");
+    localStorage.removeItem("curBackIdCard");
     btn_create.removeAttribute("onclick");
     btn_create.setAttribute('data-bs-toggle', "modal");
     btn_edit.removeAttribute("onclick");
@@ -73,9 +109,8 @@ async function rollBack2(){
     rollBack();
 }
 
-async function cardFiller(card_id){
-    let modal_card = document.getElementById("cardModal");
-    let textarea = modal_card.getElementsByClassName("front_card")[0];
+async function cardFiller(card_id, modalName){
+    let modal_card = document.getElementById(modalName);
     let response = await fetch(`cards/get_card?given_id=${card_id}`, {
         method: "GET",
         headers: {
@@ -83,12 +118,20 @@ async function cardFiller(card_id){
         }
     })
     let title = modal_card.getElementsByClassName("modal-title")[0];
-    title.innerText = document.getElementById("page_name").innerText
     response = JSON.parse((await response.text()).toString())
-    console.log(response.front)
-    textarea.innerText = response.front.toString();
-    textarea = modal_card.getElementsByClassName("back_card")[0];
-    textarea.innerText = response.back;
+    let textarea = modal_card.getElementsByClassName("front_card")[0];
+    let textarea2 = modal_card.getElementsByClassName("back_card")[0];
+    if (modalName === "cardModal"){
+        textarea.innerText = response.front.toString();
+        textarea2.innerText = response.back;
+        title.innerText = document.getElementById("page_name").innerText
+    }
+    else if (modalName === "myModal"){
+        textarea.value = response.front.toString();
+        textarea2.value = response.back;
+        title.innerText = "Изменение значений карточки"
+    }
+
 }
 
 function createCardHTML(card_id, text){
@@ -107,7 +150,10 @@ function createCardHTML(card_id, text){
     object = document.createElement("div");
     object.onclick = async function (event) {
         let card_back_id = event.target.parentElement.getAttribute("data-id")
-        await cardFiller(card_back_id);
+        if (card_back_id === null){
+            card_back_id = event.target.parentElement.parentElement.getAttribute("data-id")
+        }
+        await cardFiller(card_back_id, "cardModal");
     }
     object.setAttribute("data-bs-target", "#cardModal");
     object.setAttribute("data-bs-toggle", "modal")
@@ -122,6 +168,25 @@ function createCardHTML(card_id, text){
     object.append(h);
     new_card.append(object);
     return new_card
+}
+
+async function editCard(){
+    let cardMod = document.getElementById("myModal");
+    let front = cardMod.getElementsByClassName("front_card")[0].value;
+    let back = cardMod.getElementsByClassName("back_card")[0].value;
+    let cardId = localStorage.getItem("curBackIdCard");
+    let response = await fetch(`cards/edit_card?card_id=${cardId}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+        body: `{"front" : "${front}", "back": "${back}"}`
+    });
+    if (response.status === 200){
+        let label = document.getElementById(`card_id_${localStorage.getItem("curFrontIdCard")}`);
+        label.children[2].children[0].innerText = front;
+    }
 }
 
 async function createNewCard(){

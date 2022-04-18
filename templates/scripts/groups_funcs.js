@@ -30,6 +30,9 @@ function changeFuncs(){
         let data_id = a[i].parentElement.parentElement.getAttribute("data-id");
         a[i].onclick = function () {main_cards(data_id, a[i].innerText)}
     }
+
+    localStorage.removeItem("currentBackGroup");
+    localStorage.removeItem("currentChangingGroup");
     btn_create.removeAttribute("onclick");
     btn_create.setAttribute('data-bs-toggle', "modal");
     btn_edit.textContent = "Редактировать";
@@ -53,9 +56,20 @@ function edit_button_behav(){
     let a = document.getElementsByClassName("card_main");
     for (let i = 0; i < a.length; i++) {
         a[i].onclick = function (event) {
-            let curID = event.target.parentElement.parentElement.parentElement.id
+            let curID = event.target.parentElement.parentElement.parentElement.parentElement.id;
+            if (curID === ""){
+                curID = event.target.parentElement.parentElement.parentElement.id
+            }
             localStorage.setItem("currentChangingGroup", `${curID}`);
-            let curBackID = event.target.parentElement.parentElement.getAttribute("data-id").toString();
+            let curBackID = "";
+            try {
+                curBackID = event.target.parentElement.parentElement.getAttribute("data-id").toString();
+            }
+            catch (e) {
+                if (e.name.toString() === "TypeError"){
+                    curBackID = event.target.parentElement.parentElement.parentElement.getAttribute("data-id").toString();
+                }
+            }
             localStorage.setItem("currentBackGroup", `${curBackID}`);
         }
         a[i].setAttribute("data-bs-toggle", "modal");
@@ -160,10 +174,13 @@ function createGroupHTML(inside, new_id, data_id){
     else{
         odd_even = "odd_card"
     }
-    butt.setAttribute("class",`card_main ${odd_even} text-truncate`); //TODO make overflow inner text
+    butt.setAttribute("class",`card_main ${odd_even}`);
     butt.onclick = function () {main_cards(data_id, inside)}
     butt.setAttribute("data-bs-target", "#changeGroup");
-    butt.innerText = inside;
+    let mySpan = document.createElement("div");
+    mySpan.setAttribute("class", "cardMainSpan text-break");
+    mySpan.innerText = inside;
+    butt.append(mySpan);
     object.append(butt);
     new_group_card.append(object)
 
@@ -250,7 +267,7 @@ async function changeNameGroup(){
     })
     if (response.status === 200){
         let curGroup = document.getElementById(`${localStorage.getItem("currentChangingGroup")}`)
-        curGroup.firstChild.firstChild.firstChild.innerText = text
+        curGroup.firstChild.firstChild.firstChild.firstChild.innerText = text;
     }
 }
 

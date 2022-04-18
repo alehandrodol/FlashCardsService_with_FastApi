@@ -100,6 +100,9 @@ async def edit_group(group_id: int, new_group: GroupBase,
     if not is_group_exist:
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
 
+    if len(new_group.name) > 80:
+        raise HTTPException(status_code=400, detail="Too long name of group")
+
     group: Group = db.query(Group).filter(Group.id == group_id).first()
     group.name = new_group.name
     add_and_refresh_db(group, db)
