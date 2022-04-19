@@ -34,5 +34,12 @@ footer {
 footer p{
     color: #FFFFFF;
     font-size: 22px;
+    font-family: 'Open Sans', sans-serif;
 }
 
+.unselectable {
+  -moz-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+}

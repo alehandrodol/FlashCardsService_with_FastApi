@@ -288,6 +288,12 @@ function onload_groups(){
     let createGroupBut = myMod.getElementsByClassName("approve");
     createGroupBut = createGroupBut[createGroupBut.length-1];
     createGroupBut.setAttribute("onclick", "createGroup()");
+    let inputName = myMod.getElementsByClassName("form-control")[0];
+    inputName.addEventListener("keypress", function onEvent(event) {
+        if (event.key === "Enter") {
+            createGroupBut.click();
+        }
+    });
 
     let changeGroupMod = document.getElementById("changeGroup");
     let changeNameBut = changeGroupMod.getElementsByClassName("approve");
@@ -295,6 +301,13 @@ function onload_groups(){
     changeNameBut.onclick = async function (){
         await changeNameGroup()
     }
+
+    inputName = changeGroupMod.getElementsByClassName("form-control")[0];
+    inputName.addEventListener("keypress", function onEvent(event) {
+        if (event.key === "Enter") {
+            changeNameBut.click();
+        }
+    });
 
     let delete_buts = document.getElementsByClassName("delete_card")
     for (let i = 0; i < delete_buts.length; i++){
@@ -329,8 +342,6 @@ async function group_content(){
         }
         inner.append(car_item);
         onload_groups();
-
-
     }
 }
 

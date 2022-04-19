@@ -1,6 +1,6 @@
 function edit_button_behav(){
     let btn_edit = document.getElementById('edit');
-    btn_edit.textContent = "Удалить";
+    btn_edit.textContent = "Применить";
     let btn_create = document.getElementById("create");
     btn_create.textContent = "Отмена";
     let a = document.getElementsByClassName("check_and_but");

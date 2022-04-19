@@ -242,6 +242,9 @@ async def edit_card(card_id: int, new_card: CardBase,
     if len(new_card.back) > 200:
         raise HTTPException(status_code=400, detail="Too long back part of the card")
 
+    if len(new_card.front) < 1:
+        raise HTTPException(status_code=400, detail="Front part of the card must not be empty")
+
     group_id = get_group_card(card_id=card_id, db=db)
     if group_id is None:
         raise HTTPException(status_code=400, detail=f"You don't have card with {card_id} ID")

@@ -32,6 +32,9 @@ async def create_group(group: GroupCreate,
     if len(group.name) > 80:
         raise HTTPException(status_code=400, detail="Too long name of group")
 
+    if len(group.name) < 1:
+        raise HTTPException(status_code=400, detail="Name of group must be not empty")
+
     db_group = Group(
         name=group.name,
         user_id=current_user.id
@@ -106,6 +109,9 @@ async def edit_group(group_id: int, new_group: GroupBase,
 
     if len(new_group.name) > 80:
         raise HTTPException(status_code=400, detail="Too long name of group")
+
+    if len(new_group.name) < 1:
+        raise HTTPException(status_code=400, detail="Name of group must be not empty")
 
     group: Group = db.query(Group).filter(Group.id == group_id).first()
     group.name = new_group.name

@@ -175,6 +175,10 @@ h2 {
     margin-left: 0 !important;
 }
 
+.front_card, .back_card, .card_description  {
+    font-family: 'Open Sans', sans-serif;
+}
+
 @media (max-height: 801px){
     #main_cards {
         height: 560px;

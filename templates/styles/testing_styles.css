@@ -42,6 +42,7 @@ main {
 #term_of_card {
     font-family: 'IBM Plex Mono', monospace;
     text-align: center;
+    width: 80%;
 }
 
 .yes_no_buts {
@@ -57,4 +58,35 @@ main {
     padding: 0 !important;
 }
 
+.btn-danger:hover,
+.btn-danger:focus {
+    border: 0 !important;
+    outline: 2px solid #dc3545 !important;
+    background-color: #dc3545 !important;
+    box-shadow: 0 0 10px rgba(220, 53, 69, 0.8) !important;
+}
+
+.btn-danger:active {
+    border: 0 !important;
+    background-color: #c71e2f !important;
+}
+
+.btn-success:hover,
+.btn-success:focus {
+    border: 0 !important;
+    outline: 2px solid #198754 !important;
+    background-color: #198754 !important;
+    box-shadow: 0 0 10px rgba(25, 135, 84, 0.8) !important;
+}
+
+.btn-success:active {
+    border: 0 !important;
+    background-color: #117848 !important;
+}
+
+@media (max-width: 1500px){
+    #term_of_card {
+        width: 100%;
+    }
+}
 

@@ -147,9 +147,13 @@ main{
 
 #create:focus,
 #create:hover {
-    outline: none;
-    border: 3px solid #EF9452;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(239, 148, 82, 0.6);
+    outline: 2px solid #EF9452;
+    box-shadow:0 0 2rem rgba(239, 148, 82, 0.6);
+}
+
+#create:active {
+    background-color: rgb(229, 133, 64);
+    outline-color: rgb(229, 133, 64);
 }
 
 #exit {
@@ -212,9 +216,8 @@ main{
 
 .delete_card:focus,
 .delete_card:hover {
-    outline: none;
-    border: 3px solid #FFCE6D;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(255, 206, 109, 0.6);
+    outline: 2px solid #FFCE6D;
+    box-shadow:0 0 2rem rgba(255, 206, 109, 0.6);
 }
 
 .test_card {
@@ -266,9 +269,8 @@ main{
 .switch_groups:focus,
 .test_card:hover,
 .test_card:focus{
-    outline: none;
-    border: 3px solid #351C45;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(53, 28, 69, 0.6);
+    outline: 2px solid #351C45;
+    box-shadow: 0 0 2rem rgba(53, 28, 69, 0.6);
 }
 
 #left_but {
@@ -286,13 +288,21 @@ main{
     background-color: #C8A9DC;
 }
 
+.modal-content label {
+    font-family: 'Open Sans', sans-serif;
+}
+
 .form-control {
     border: 2px solid #351C45 !important;
 }
 
 .form-control:focus {
     border: 2px solid #351C45;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(53, 28, 69, 0.6);
+    box-shadow:0 0 8px rgba(53, 28, 69, 0.6);
+}
+
+#exampleModalLabel {
+    font-family: 'Montserrat Alternates', sans-serif;
 }
 
 .modal-footer {
@@ -337,8 +347,13 @@ main{
 .cancel:focus,
 .cancel:hover {
     color: #FFFFFF;
-    outline: none;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(96, 54, 122, 0.6);
+    outline: 2px solid #60367A;
+    box-shadow:0 0 8px rgba(96, 54, 122, 0.6);
+}
+
+.cancel:active {
+    background-color: rgb(80, 40, 105);
+    outline-color: rgb(80, 40, 105);
 }
 
 .approve {
@@ -348,39 +363,46 @@ main{
 .approve:hover,
 .approve:focus {
     color: #FFFFFF;
-    outline: none;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(255, 206, 109, 0.6);
+    outline: 2px solid #FFCE6D;
+    box-shadow:0 0 8px rgba(255, 206, 109, 0.6);
+}
+
+.approve:active{
+    background-color: rgb(235, 184, 82);
+    outline-color: rgb(235, 184, 82);
 }
 
 #cross_exit:focus {
     outline: none;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(50, 50, 50, 0.6);
+    box-shadow:0 0 8px rgba(50, 50, 50, 0.6);
 }
 
 .even_card:hover,
 .even_card:focus,
 #exit:hover,
 #exit:focus{
-    outline: none;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(200, 169, 220, 0.6);
+    outline: 2px solid #C8A9DC;
+    box-shadow:0 0 2rem rgba(200, 169, 220, 0.6);
 }
 
 .odd_card:hover,
 .odd_card:focus,
 #edit:focus,
 #edit:hover{
-    outline: none;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 2rem rgba(255, 228, 175, 0.6);
+    outline: 2px solid #FFE4AF;
+    box-shadow: 0 0 2rem rgba(255, 228, 175, 0.6);
 }
 
 .odd_card:active,
 #edit:active {
     background-color: rgb(247, 214, 148);
+    outline-color: rgb(247, 214, 148);
 }
 
 .even_card:active,
 #exit:active {
     background-color: rgb(188, 150, 214);
+    outline-color: rgb(188, 150, 214);
 }
 
 @media (max-width: 1201px){
