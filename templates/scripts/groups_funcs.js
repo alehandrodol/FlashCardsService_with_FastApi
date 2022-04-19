@@ -10,13 +10,20 @@ async function main_cards(back_id, group_name){
         }
 }
 
-async function start_test(){
-    let response = await fetch("/testing", {
+async function start_test(event){
+    let group_card = event.target.parentElement.parentElement.parentElement;
+    if (group_card.getAttribute("data-id") === null){
+        group_card = event.target.parentElement.parentElement;
+    }
+    localStorage.setItem("group_id", group_card.getAttribute("data-id"));
+    let group_name = group_card.getElementsByClassName("cardMainSpan")[0].innerText;
+
+    let response = await fetch(`/testing?group_name=${group_name}`, {
             method: "GET"
         });
         if (response.status === 200){
             document.documentElement.innerHTML = (await ((await response).text())).toString()
-            window.history.pushState({},"", "/testing");
+            window.history.pushState({},"", `/testing?group_name=${group_name}`);
             rel();
         }
 }
@@ -201,7 +208,9 @@ function createGroupHTML(inside, new_id, data_id){
 
     butt = document.createElement("div");
     butt.setAttribute("class", "test_card card_but text-white");
-    butt.setAttribute("onclick", "start_test()");
+    butt.onclick = async function(event) {
+        await start_test(event);
+    }
     icon = document.createElement("i")
     icon.setAttribute("class", "bi bi-play-fill");
     butt.append(icon)

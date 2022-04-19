@@ -30,6 +30,19 @@
     align-items: center;
     flex: 19;
     cursor: pointer;
+
+    text-overflow: ellipsis;
+    overflow-x: hidden;
+    white-space: nowrap;
+}
+
+h2 {
+    height: 100%;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
 }
 
 .term_card:focus,

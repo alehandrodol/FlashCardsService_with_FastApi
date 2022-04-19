@@ -63,8 +63,8 @@ def get_logged(request: Request, group_name: str):
 
 
 @app.get("/testing", response_class=HTMLResponse)
-def get_logged(request: Request):
-    return templates.TemplateResponse("testing.html", {"request": request, "path": "test", "title": "Название группы"})
+def get_logged(request: Request, group_name: str):
+    return templates.TemplateResponse("testing.html", {"request": request, "path": "test", "title": f"{group_name}"})
 
 
 @app.post("/token", response_model=Token)

@@ -9,7 +9,7 @@ async function exit(){
     if (response.status === 200){
         document.documentElement.innerHTML = (await ((await response).text())).toString()
         window.history.pushState({},"", "/");
-        localStorage.removeItem('token');
+        localStorage.clear()
         rel();
     }
 }
@@ -20,6 +20,11 @@ async function back_to_groups(){
     });
     if (response.status === 200){
         document.documentElement.innerHTML = (await ((await response).text())).toString()
+        if (window.location.href.includes("/testing")){
+            localStorage.removeItem("frontTerm");
+            localStorage.removeItem("backTerm");
+            localStorage.removeItem("card_id");
+        }
         window.history.pushState({},"", "/groups");
         rel();
     }

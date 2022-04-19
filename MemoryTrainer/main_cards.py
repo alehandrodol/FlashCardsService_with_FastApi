@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from typing import List, Dict, Optional
 from random import randint
-from json import loads, dumps
+from json import loads, dumps, dump
 
 from User.models import User
 from User.user_manager import get_current_user
@@ -42,6 +42,13 @@ async def create_card(card: CardCreate,
                       card_dict: Optional[str] = Cookie(default="{}")):
     if not current_user:
         return status.HTTP_401_UNAUTHORIZED
+
+    if len(card.front) > 200:
+        raise HTTPException(status_code=400, detail="Too long front part of the card")
+
+    if len(card.back) > 200:
+        raise HTTPException(status_code=400, detail="Too long back part of the card")
+
     is_group_exist = check_group(group_id=card.group_id, current_user=current_user, db=db)
     if not is_group_exist:
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
@@ -76,12 +83,12 @@ async def get_card(given_id: int,
     return res_card
 
 
-@router.get("/next/{group_id}")
+@router.get("/next/{group_id}", response_model=CardShow)
 async def get_next_card(group_id: int,
                         response: Response,
                         current_user: User = Depends(get_current_user),
                         db: Session = Depends(get_db),
-                        card_dict: Optional[str] = Cookie(default="{}")) -> Card:
+                        card_dict: Optional[str] = Cookie(default="{}")) -> CardShow:
     if not current_user:
         return status.HTTP_401_UNAUTHORIZED
 
@@ -105,7 +112,13 @@ async def get_next_card(group_id: int,
     card_dict[str(group_id)].pop(rand_num)
     response.set_cookie(key="card_id_dict", value=dumps({"ID": card.id, "is_verdict": False}))
     response.set_cookie(key="card_dict", value=dumps(card_dict))
-    return card
+    show_card: CardShow = CardShow(
+        front=card.front,
+        back=card.back,
+        id=card.id,
+        group_id=card.group_id
+    )
+    return show_card
 
 
 @router.post("/repeated")
@@ -222,6 +235,12 @@ async def edit_card(card_id: int, new_card: CardBase,
 
     if not current_user:
         return status.HTTP_401_UNAUTHORIZED
+
+    if len(new_card.front) > 200:
+        raise HTTPException(status_code=400, detail="Too long front part of the card")
+
+    if len(new_card.back) > 200:
+        raise HTTPException(status_code=400, detail="Too long back part of the card")
 
     group_id = get_group_card(card_id=card_id, db=db)
     if group_id is None:

@@ -28,6 +28,10 @@ async def create_group(group: GroupCreate,
                        db: Session = Depends(get_db)):
     if not current_user:
         return status.HTTP_401_UNAUTHORIZED
+
+    if len(group.name) > 80:
+        raise HTTPException(status_code=400, detail="Too long name of group")
+
     db_group = Group(
         name=group.name,
         user_id=current_user.id

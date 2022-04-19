@@ -40,7 +40,8 @@ main {
 }
 
 #term_of_card {
-
+    font-family: 'IBM Plex Mono', monospace;
+    text-align: center;
 }
 
 .yes_no_buts {
