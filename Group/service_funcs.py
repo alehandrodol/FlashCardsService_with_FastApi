@@ -28,7 +28,8 @@ def add_and_refresh_db(inst: Group, db: Session):
 def get_cards_in_group_service(group_id: int,
                                db: Session) -> List[Card]:
 
-    cards: List[Card] = db.query(Card).filter(Card.group_id == group_id).all()
+    cards: List[Card] = db.query(Card).filter(Card.group_id == group_id).\
+        order_by(Card.active.desc(), Card.create_date.asc()).all()
 
     return cards
 

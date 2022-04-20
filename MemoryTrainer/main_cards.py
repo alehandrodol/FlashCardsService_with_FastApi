@@ -178,10 +178,42 @@ async def activate_cards_by_id(id_list: List[int],
     return status.HTTP_200_OK
 
 
-@router.get("/not_active_cards/{group_id}")
+@router.post("/deactivate")
+async def deactivate_cards_by_id(id_list: List[int],
+                                 current_user: User = Depends(get_current_user),
+                                 db: Session = Depends(get_db)):
+    """This function changes cell in column 'active' in table 'cards' to False state if it was True,
+    only for authorized users."""
+
+    if not current_user:
+        return status.HTTP_401_UNAUTHORIZED
+
+    deactivated: List[int] = []
+    for cur_id in id_list:
+        temp_card: Card = db.query(Card).filter(Card.id == cur_id).first()
+
+        if temp_card is None:
+            raise HTTPException(status_code=400, detail=f"You don't have card with {cur_id} ID, "
+                                                        f"but these cards were deactivated: {deactivated}")
+
+        if not check_group(group_id=temp_card.group_id, current_user=current_user, db=db):
+            raise HTTPException(status_code=400, detail=f"You don't have card with {cur_id} ID, "
+                                                        f"but these cards were deactivated: {deactivated}")
+
+        if not temp_card.active:
+            continue
+
+        temp_card.active = False
+
+        deactivated.append(cur_id)
+        add_and_refresh_db(temp_card, db)
+    return status.HTTP_200_OK
+
+
+@router.get("/not_active_cards/{group_id}", response_class=JSONResponse)
 async def get_not_active_cards(group_id: int,
                                current_user: User = Depends(get_current_user),
-                               db: Session = Depends(get_db)) -> List[CardShow]:
+                               db: Session = Depends(get_db)) -> List[int]:
     """This function returns cards_id as List from given group"""
 
     if not current_user:
@@ -190,16 +222,10 @@ async def get_not_active_cards(group_id: int,
     if not check_group(group_id=group_id, db=db, current_user=current_user):
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
 
-    result: List[CardShow] = []
+    result: List[int] = []
     temp_list: List[Card] = db.query(Card).filter(Card.active == False, Card.group_id == group_id).all()
     for card in temp_list:
-        temp_card: CardShow = CardShow(
-            front=card.front,
-            back=card.back,
-            id=card.id,
-            group_id=card.group_id
-        )
-        result.append(temp_card)
+        result.append(card.id)
     return result
 
 

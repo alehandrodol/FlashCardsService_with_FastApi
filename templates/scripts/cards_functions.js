@@ -6,14 +6,15 @@ function edit_button_behav(){
     let a = document.getElementsByClassName("check_and_but");
     for (let i = 0; i < a.length; i++) {
         a[i].children[1].style.display = "inline-flex";
-        a[i].children[2].setAttribute("data-bs-target", "#myModal")
-        a[i].children[2].onclick = async function (event) {
+        a[i].children[3].style.display = "inline-flex";
+        a[i].children[4].setAttribute("data-bs-target", "#myModal")
+        a[i].children[4].onclick = async function (event) {
             let card_back_id = event.target.parentElement.getAttribute("data-id")
             if (card_back_id === null){
                 card_back_id = event.target.parentElement.parentElement.getAttribute("data-id")
             }
             localStorage.setItem("curBackIdCard", card_back_id);
-            localStorage.setItem("curFrontIdCard", a[i].children[0].id)
+            localStorage.setItem("curFrontIdCard", a[i].children[0].getAttribute("data-id"))
             await cardFiller(card_back_id, "myModal");
         }
     }
@@ -40,8 +41,9 @@ function rollBack(){
     for (let i = 0; i < a.length; i++) {
         a[i].children[0].checked = false;
         a[i].children[1].style.display = "none";
-        a[i].children[2].setAttribute("data-bs-target", "#cardModal")
-        a[i].children[2].onclick = async function (event) {
+        a[i].children[3].style.display = "none";
+        a[i].children[4].setAttribute("data-bs-target", "#cardModal")
+        a[i].children[4].onclick = async function (event) {
             let card_back_id = event.target.parentElement.getAttribute("data-id")
             if (card_back_id === null){
                 card_back_id = event.target.parentElement.parentElement.getAttribute("data-id")
@@ -72,9 +74,9 @@ async function rollBack2(){
     for (let i = 0; i < checkboxes.length; i++){
         if (checkboxes[i].checked === true){
             if (first_id === null){
-                first_id = checkboxes[i].id;
+                first_id = checkboxes[i].getAttribute("data-id");
             }
-            let cur_id = checkboxes[i].id;
+            let cur_id = checkboxes[i].getAttribute("data-id");
             card_list.push(cur_id);
             back_id_list.push(checkboxes[i].parentElement.getAttribute("data-id"));
         }
@@ -88,8 +90,10 @@ async function rollBack2(){
     if (first_id !== null){
         for (let i = first_id - 1; i < cab.length; i++){
             cab[i].setAttribute("id", `card_id_${(i+1).toString()}`);
-            cab[i].getElementsByClassName("toDelete")[0].setAttribute("id", `${(i+1).toString()}`)
-            cab[i].getElementsByClassName("check_label")[0].setAttribute("for", `${(i+1).toString()}`)
+            cab[i].getElementsByClassName("toDelete")[0].setAttribute("id", `delete_id_${(i+1).toString()}`)
+            cab[i].getElementsByClassName("check_label")[0].setAttribute("for", `delete_id_${(i+1).toString()}`)
+            cab[i].getElementsByClassName("toActivate")[0].setAttribute("id", `activate_id_${(i+1).toString()}`)
+            cab[i].getElementsByClassName("check_label")[1].setAttribute("for", `activate_id_${(i+1).toString()}`)
             let term_card = cab[i].getElementsByClassName("term_card")[0];
             let odd_even = "odd_term"
             if ((i+1) % 2 === 0){
@@ -105,6 +109,54 @@ async function rollBack2(){
             },
             body: JSON.stringify(back_id_list)
         })
+    }
+    checkboxes = document.getElementsByClassName("toActivate");
+    let group_id = localStorage.getItem("group_id");
+    let not_active_cards = await fetch(`/cards/not_active_cards/${group_id}`, {
+        method: "GET",
+        headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    })
+    let list_for_activating = [];
+    let list_for_deactivating = [];
+    not_active_cards = JSON.parse((await not_active_cards.text()).toString())
+    for (let i = 0; i < checkboxes.length; i++){
+        let cur_card_id = checkboxes[i].parentElement.getAttribute("data-id");
+        if (checkboxes[i].checked === true && not_active_cards.indexOf(Number(cur_card_id)) !== -1){
+            list_for_activating.push(cur_card_id);
+        }
+        else if (checkboxes[i].checked === false && not_active_cards.indexOf(Number(cur_card_id)) === -1){
+            list_for_deactivating.push(cur_card_id);
+        }
+    }
+    if (list_for_activating.length !== 0){
+        let act_resp = await fetch("cards/activate", {
+            method: "POST",
+            headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+            body: JSON.stringify(list_for_activating)
+        })
+        if (act_resp.status === 200){
+            console.log("Карты активированны");
+        }
+    }
+
+    if (list_for_deactivating.length !== 0){
+        let deact_resp = await fetch("cards/deactivate", {
+            method: "POST",
+            headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+            },
+            body: JSON.stringify(list_for_deactivating)
+        })
+        if (deact_resp.status === 200){
+            console.log("Карты деактивированны");
+        }
     }
     rollBack();
 }
@@ -134,19 +186,36 @@ async function cardFiller(card_id, modalName){
 
 }
 
-function createCardHTML(card_id, text){
+function createCardHTML(card_id, text, is_active){
     let new_card = document.createElement("div");
     new_card.setAttribute("class", "check_and_but")
     new_card.setAttribute("id", `card_id_${card_id}`)
+
     let object = document.createElement("input");
     object.setAttribute("type", "checkbox");
-    object.setAttribute("class", "toDelete");
-    object.setAttribute("id", card_id.toString())
+    object.setAttribute("class", "toDelete check");
+    object.setAttribute("id", `delete_id_${card_id.toString()}`)
+    object.setAttribute("data-id", card_id.toString());
     new_card.append(object);
     object = document.createElement("label");
-    object.setAttribute("for", card_id.toString());
+    object.setAttribute("for", `delete_id_${card_id.toString()}`);
     object.setAttribute("class", "check_label");
     new_card.append(object);
+
+    object = document.createElement("input");
+    object.setAttribute("type", "checkbox");
+    object.setAttribute("class", "toActivate check");
+    object.setAttribute("id", `activate_id_${card_id.toString()}`)
+    object.setAttribute("data-id", card_id.toString());
+    if (is_active){
+        object.checked = true;
+    }
+    new_card.append(object);
+    object = document.createElement("label");
+    object.setAttribute("for", `activate_id_${card_id.toString()}`);
+    object.setAttribute("class", "check_label");
+    new_card.append(object);
+
     object = document.createElement("div");
     object.onclick = async function (event) {
         let card_back_id = event.target.parentElement.getAttribute("data-id")
@@ -185,7 +254,7 @@ async function editCard(){
     });
     if (response.status === 200){
         let label = document.getElementById(`card_id_${localStorage.getItem("curFrontIdCard")}`);
-        label.children[2].children[0].innerText = front;
+        label.children[4].children[0].innerText = front;
     }
 }
 
@@ -236,7 +305,7 @@ async function cards_data(group_id){
         let list_cards = JSON.parse((await response.text()).toString())
         let cont = document.getElementById("cards_container");
         for (let i = 0; i < list_cards.length; i++){
-            let new_card = createCardHTML(i+1, list_cards[i].front);
+            let new_card = createCardHTML(i+1, list_cards[i].front, list_cards[i].active);
             new_card.setAttribute("data-id", `${list_cards[i].id}`)
             cont.append(new_card);
         }
