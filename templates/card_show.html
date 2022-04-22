@@ -1,21 +1,26 @@
 <div class="modal fade" id="cardModal" tabindex="-1" role="dialog" aria-labelledby="cardModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen" role="document">
         <div class="modal-content align-items-center" id="mod-cont-card-id">
-          <div class="modal-header d-flex justify-content-center mt-3">
-            <h1 class="modal-title" id="exampleModalLabel">Название карточки</h1>
-          </div>
-          <div class="modal-body d-flex flex-column justify-content-between align-items-center w-100 mb-3">
-              <div class="d-flex flex-column justify-content-between w-75">
-                  <label for="front-card-show" class="col-form-label text-white fs-4">Слово/Вопрос</label>
-                  <h3 class="form-control mb-3 fs-4 front_card text-break" id="front-card-show">Я вопрос</h3>
-                  <label for="back-card-show" class="col-form-label text-white fs-4">Значение/Ответ</label>
-                  <h3 class="form-control mb-3 fs-4 back_card text-break" id="back-card-show">Я ответ</h3>
-                  <label for="description" class="col-form-label text-white fs-4">Описание</label>
-                  <p class="form-control card_description text-break" id="description">
-                      Здесь будет описание карточки ;)
-                  </p>
-              </div>
-          </div>
+            <div class="modal-header d-flex justify-content-center mt-3 w-100">
+                <div class="position-relative w-100 h-100">
+                    <button type="button" class="btn-close btn-lg close_modal" id="cross_exit" data-bs-dismiss="modal"></button>
+                    <div class="d-flex justify-content-center">
+                        <h1 class="modal-title" id="exampleModalLabel">Название карточки</h1>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body d-flex flex-column justify-content-between align-items-center w-100 mb-3">
+                <div class="d-flex flex-column justify-content-between w-75">
+                    <label for="front-card-show" class="col-form-label text-white fs-4">Слово/Вопрос</label>
+                    <h3 class="form-control mb-3 fs-4 front_card text-break" id="front-card-show">Я вопрос</h3>
+                    <label for="back-card-show" class="col-form-label text-white fs-4">Значение/Ответ</label>
+                    <h3 class="form-control mb-3 fs-4 back_card text-break" id="back-card-show">Я ответ</h3>
+                    <label for="description" class="col-form-label text-white fs-4">Описание</label>
+                    <p class="form-control card_description text-break" id="description">
+                        Здесь будет описание карточки
+                    </p>
+                </div>
+            </div>
         </div>
     </div>
 </div>

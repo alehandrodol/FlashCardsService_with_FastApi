@@ -106,6 +106,7 @@ async function deleteGroup(){
         return
     }
     group_card.remove();
+    localStorage.removeItem("GroupToDelete");
     let items_list = document.getElementsByClassName("groups_cards");
     if (items_list[items_list.length-1].getElementsByClassName("group_card").length === 0){
         let car_items = document.getElementsByClassName("carousel-item");

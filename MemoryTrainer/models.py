@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, sql
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, ForeignKey, sql, Text
 from sqlalchemy.orm import relationship
 from core.database import Base
 from Group.models import Group
@@ -10,6 +10,7 @@ class Card(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     front = Column(String)
     back = Column(String)
+    descriptionText = Column(Text, default="")
     repeats = Column(Integer, default=0)
     true_verdicts = Column(Integer, default=0)
     active = Column(Boolean, default=True)

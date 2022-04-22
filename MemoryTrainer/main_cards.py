@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 
 from typing import List, Dict, Optional
 from random import randint
-from json import loads, dumps, dump
+from json import loads, dumps
 
 from User.models import User
 from User.user_manager import get_current_user
@@ -36,10 +36,8 @@ router = APIRouter()
 
 @router.post("/create_card", response_class=JSONResponse)
 async def create_card(card: CardCreate,
-                      response: Response,
                       current_user: User = Depends(get_current_user),
-                      db: Session = Depends(get_db),
-                      card_dict: Optional[str] = Cookie(default="{}")):
+                      db: Session = Depends(get_db)):
     if not current_user:
         return status.HTTP_401_UNAUTHORIZED
 
@@ -52,15 +50,13 @@ async def create_card(card: CardCreate,
     is_group_exist = check_group(group_id=card.group_id, current_user=current_user, db=db)
     if not is_group_exist:
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
-    card_dict: Dict[str, List[int]] = loads(card_dict)
-    card_dict[str(card.group_id)] = []
     db_card = Card(
         front=card.front,
         back=card.back,
+        descriptionText=card.descriptionText,
         group_id=card.group_id
     )
     add_and_refresh_db(db_card, db)
-    response.set_cookie(key="card_dict", value=dumps(card_dict))
     new_id = db.query(Card).filter(Card.group_id == card.group_id).order_by(Card.id.desc()).first().id
     return dumps({"status": 200, "card_id": new_id, "active": True})
 
@@ -78,7 +74,8 @@ async def get_card(given_id: int,
         front=card.front,
         back=card.back,
         id=card.id,
-        group_id=card.group_id
+        group_id=card.group_id,
+        descriptionText=card.descriptionText
     )
     return res_card
 
@@ -123,7 +120,8 @@ async def get_next_card(group_id: int,
         front=card.front,
         back=card.back,
         id=card.id,
-        group_id=card.group_id
+        group_id=card.group_id,
+        descriptionText=card.descriptionText
     )
     return show_card
 
@@ -289,6 +287,7 @@ async def edit_card(card_id: int, new_card: CardBase,
     card: Card = db.query(Card).filter(Card.id == card_id).first()
     card.front = new_card.front
     card.back = new_card.back
+    card.descriptionText = new_card.descriptionText
     add_and_refresh_db(card, db)
 
     return status.HTTP_200_OK

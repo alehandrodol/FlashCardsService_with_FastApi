@@ -5,6 +5,7 @@ from datetime import datetime
 class CardBase(BaseModel):
     front: str = ""
     back: str = ""
+    descriptionText: str = ""
 
 
 class CardCreate(CardBase):

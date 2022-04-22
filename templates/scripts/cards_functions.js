@@ -162,31 +162,6 @@ async function rollBack2(){
     rollBack();
 }
 
-async function cardFiller(card_id, modalName){
-    let modal_card = document.getElementById(modalName);
-    let response = await fetch(`cards/get_card?given_id=${card_id}`, {
-        method: "GET",
-        headers: {
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-        }
-    })
-    let title = modal_card.getElementsByClassName("modal-title")[0];
-    response = JSON.parse((await response.text()).toString())
-    let textarea = modal_card.getElementsByClassName("front_card")[0];
-    let textarea2 = modal_card.getElementsByClassName("back_card")[0];
-    if (modalName === "cardModal"){
-        textarea.innerText = response.front.toString();
-        textarea2.innerText = response.back;
-        title.innerText = document.getElementById("page_name").innerText
-    }
-    else if (modalName === "myModal"){
-        textarea.value = response.front.toString();
-        textarea2.value = response.back;
-        title.innerText = "Изменение значений карточки"
-    }
-
-}
-
 function createCardHTML(card_id, text, is_active){
     let new_card = document.createElement("div");
     new_card.setAttribute("class", "check_and_but")
@@ -247,6 +222,7 @@ async function editCard(){
     let cardMod = document.getElementById("myModal");
     let front = cardMod.getElementsByClassName("front_card")[0].value;
     let back = cardMod.getElementsByClassName("back_card")[0].value;
+    let description = document.getElementById("tipaTextArea").innerText;
     let cardId = localStorage.getItem("curBackIdCard");
     let response = await fetch(`cards/edit_card?card_id=${cardId}`, {
         method: "POST",
@@ -254,7 +230,11 @@ async function editCard(){
             "Content-Type": "application/json",
             "Authorization": `Bearer ${localStorage.getItem("token")}`
         },
-        body: `{"front" : "${front}", "back": "${back}"}`
+        body: JSON.stringify({
+            "front": front,
+            "back": back,
+            "descriptionText": description,
+        })
     });
     if (response.status === 200){
         let label = document.getElementById(`card_id_${localStorage.getItem("curFrontIdCard")}`);
@@ -276,6 +256,7 @@ async function createNewCard(){
     }
     let front_text = document.getElementById("front-card").value;
     let back_text = document.getElementById("back-card").value;
+    let description = document.getElementById("tipaTextArea").innerText;
 
     let response = await fetch("/cards/create_card", {
         method: "POST",
@@ -286,6 +267,7 @@ async function createNewCard(){
         body: JSON.stringify({
             "front": front_text,
             "back": back_text,
+            "descriptionText": description,
             "group_id": localStorage.getItem("group_id")
         })
     })

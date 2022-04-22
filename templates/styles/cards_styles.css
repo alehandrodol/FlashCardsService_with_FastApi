@@ -185,17 +185,6 @@ h2 {
     border-radius: 2px !important;
 }
 
-.card_description {
-    background-color: #FFFFFF;
-    min-height: 45vh !important;
-    font-size: calc(10px + 1.5vh);
-    margin-left: 0 !important;
-}
-
-.front_card, .back_card, .card_description  {
-    font-family: 'Open Sans', sans-serif;
-}
-
 .off_card {
     background-color: #ebebeb !important;
     border-color: #7a7a7a !important;

@@ -348,6 +348,7 @@ main{
 
 .cancel {
     background-color: #60367A;
+    outline: 0;
 }
 
 .cancel:focus,
@@ -359,7 +360,7 @@ main{
 
 .cancel:active {
     background-color: rgb(80, 40, 105);
-    outline-color: rgb(80, 40, 105);
+    outline: 0;
 }
 
 .approve {
