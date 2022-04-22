@@ -62,7 +62,7 @@ async def create_card(card: CardCreate,
     add_and_refresh_db(db_card, db)
     response.set_cookie(key="card_dict", value=dumps(card_dict))
     new_id = db.query(Card).filter(Card.group_id == card.group_id).order_by(Card.id.desc()).first().id
-    return dumps({"status": 200, "card_id": new_id})
+    return dumps({"status": 200, "card_id": new_id, "active": True})
 
 
 @router.get("/get_card", response_model=CardShow)
@@ -83,7 +83,7 @@ async def get_card(given_id: int,
     return res_card
 
 
-@router.get("/next/{group_id}", response_model=CardShow)
+@router.get("/next/{group_id}", response_model=CardShow, status_code=200)
 async def get_next_card(group_id: int,
                         response: Response,
                         current_user: User = Depends(get_current_user),
@@ -96,13 +96,20 @@ async def get_next_card(group_id: int,
     if not is_group_exist:
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
     card_dict: Dict[str, List[int]] = loads(card_dict)
+    first_call = False
+
     try:
         len(card_dict[str(group_id)])
     except KeyError:
         card_dict[str(group_id)] = []
+        first_call = True
     finally:
         if len(card_dict[str(group_id)]) == 0:
             get_group_cards_service(group_id=group_id, db=db, response=response, card_dict=card_dict)
+            if not first_call:
+                response.set_cookie(key="card_dict", value=dumps(card_dict))
+                response.status_code = status.HTTP_205_RESET_CONTENT
+                return CardShow()
         if len(card_dict[str(group_id)]) == 0:
             raise HTTPException(status_code=400, detail="Group with this ID is empty")
 

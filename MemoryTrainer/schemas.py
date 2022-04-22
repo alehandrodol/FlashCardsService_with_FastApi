@@ -3,8 +3,8 @@ from datetime import datetime
 
 
 class CardBase(BaseModel):
-    front: str
-    back: str
+    front: str = ""
+    back: str = ""
 
 
 class CardCreate(CardBase):
@@ -12,8 +12,8 @@ class CardCreate(CardBase):
 
 
 class CardShow(CardBase):
-    id: int
-    group_id: int
+    id: int = -1
+    group_id: int = -1
 
 
 class Card(CardBase):

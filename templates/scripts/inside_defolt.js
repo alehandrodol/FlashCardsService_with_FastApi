@@ -24,6 +24,8 @@ async function back_to_groups(){
             localStorage.removeItem("frontTerm");
             localStorage.removeItem("backTerm");
             localStorage.removeItem("card_id");
+            localStorage.removeItem("TestEnd");
+            document.cookie = "card_dict=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
         }
         window.history.pushState({},"", "/groups");
         rel();

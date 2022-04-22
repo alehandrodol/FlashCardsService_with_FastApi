@@ -1,3 +1,9 @@
+function get_cookie(name){
+    return document.cookie.split(';').some(c => {
+        return c.trim().startsWith(name + '=');
+    });
+}
+
 async function nextCard() {
     let response = await fetch(`/cards/next/${localStorage.getItem("group_id")}`, {
         method: "GET",
@@ -15,9 +21,29 @@ async function nextCard() {
         localStorage.setItem("backTerm", data.back);
         localStorage.setItem("card_id", data.id);
     }
+    else if (response.status === 205){
+        localStorage.setItem("TestEnd", "True");
+        await fetch("/static/testing_main_ending.html")
+            .then(response=> response.text())
+            .then(text=> document.getElementById('inside_main').innerHTML = text);
+    }
+}
+
+async function replayBut(){
+    localStorage.setItem("TestEnd", "False");
+    await fetch("/static/testing_main_defolt.html")
+            .then(response=> response.text())
+            .then(text=> document.getElementById('inside_main').innerHTML = text);
+    await nextCard();
 }
 
 async function onloadTest(){
+    if (localStorage.getItem("TestEnd") === "True"){
+        fetch("/static/testing_main_ending.html")
+            .then(response=> response.text())
+            .then(text=> document.getElementById('inside_main').innerHTML = text);
+        return
+    }
     let front = localStorage.getItem("frontTerm");
     if (front === null){
         await nextCard();

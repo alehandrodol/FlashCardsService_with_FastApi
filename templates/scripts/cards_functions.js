@@ -263,7 +263,7 @@ async function createNewCard(){
     last_card = last_card[last_card.length-1]
     let card_id = -1
     try {
-        card_id = (Number(last_card.id)+1)
+        card_id = (Number(last_card.getAttribute("data-id"))+1)
     }
     catch (e) {
         if (e.name.toString() === "TypeError"){
@@ -287,7 +287,7 @@ async function createNewCard(){
     })
     if (response.status === 200){
         let resp_data = JSON.parse(await response.json())
-        let new_card = createCardHTML(card_id, front_text);
+        let new_card = createCardHTML(card_id, front_text, resp_data.active);
         new_card.setAttribute("data-id", resp_data.card_id)
         let cards = document.getElementById("cards_container");
         cards.append(new_card);
