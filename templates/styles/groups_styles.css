@@ -301,8 +301,9 @@ main{
     box-shadow:0 0 8px rgba(53, 28, 69, 0.6);
 }
 
-#exampleModalLabel {
-    font-family: 'Montserrat Alternates', sans-serif;
+.modal-title {
+    font-family: 'Montserrat Alternates', sans-serif !important;
+    text-align: center;
 }
 
 .modal-footer {
@@ -317,6 +318,11 @@ main{
     font-family: 'Nunito', sans-serif;
     color: #FFFFFF;
     border-radius: 7px;
+}
+
+.but_inside_approve {
+    flex-shrink: 0;
+    width: 35%;
 }
 
 .mod-cont-id {
@@ -416,7 +422,7 @@ main{
         width: 74px !important;
     }
 }
-@media (max-height: 1201px){
+@media (max-height: 800px){
     .test_card {
         width: 59px !important;
         height: 59px !important;

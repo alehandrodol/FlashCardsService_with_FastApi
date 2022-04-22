@@ -20,10 +20,21 @@ async function login(event) {
     }
 }
 
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", async function() {
     if (localStorage.getItem("token") !== null){
-        window.history.pushState({},"", "/groups");
-        rel();
+        let check_me = await fetch("/user/me", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            }
+        })
+        if (check_me.status === 200) {
+            window.history.pushState({}, "", "/groups");
+            rel();
+        }
+        else {
+            localStorage.clear()
+        }
     }
     let btn = document.querySelector('input[id=enter]');
     btn.addEventListener('click', async function (event) {

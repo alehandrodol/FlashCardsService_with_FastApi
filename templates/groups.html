@@ -34,7 +34,7 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content align-items-center mod-cont-id">
               <div class="modal-header d-flex justify-content-center mt-3">
-                <h5 class="modal-title fs-2" id="changeGroupLabel">Изменить название группы</h5>
+                <h5 class="modal-title fs-3" id="changeGroupLabel">Изменить название группы</h5>
               </div>
               <div class="modal-body d-flex justify-content-center align-content-center w-100 mb-3">
                 <form>
@@ -44,12 +44,13 @@
                   </div>
                 </form>
               </div>
-              <div class="modal-footer w-75 d-flex flex- justify-content-between align-items-center mb-5">
+              <div class="modal-footer w-75 d-flex justify-content-between align-items-center mb-5">
                 <button type="button" class="btn me-3 fs-4 cancel" data-bs-dismiss="modal">Отмена</button>
                 <button type="button" class="btn ms-3 fs-4 approve" data-bs-dismiss="modal">Применить</button>
               </div>
             </div>
         </div>
     </div>
+    {% include 'approve_modal.html' %}
     <div class="switcher"><button class="switch_groups text-white carousel-control-next" id="right_but"  type="button" data-bs-target="#carouselWithCards" data-bs-slide="next"><i class="bi bi-play-fill"></i></button></div>
 </main>

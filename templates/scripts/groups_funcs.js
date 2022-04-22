@@ -90,16 +90,8 @@ function edit_button_behav(){
     btn_edit.setAttribute("onclick", "editButSecond()")
 }
 
-async function deleteGroup(event){
-    let old_id = ""
-    try{
-        old_id = event.target.getAttribute("data-id").toString();
-    }
-    catch (e){
-        if (e.name.toString() === "TypeError"){
-            old_id = event.target.parentNode.getAttribute("data-id").toString();
-        }
-    }
+async function deleteGroup(){
+    let old_id = localStorage.getItem("GroupToDelete");
 
     let group_card = document.getElementById(old_id);
     let group_data_id = group_card.getElementsByClassName("group_card")[0].getAttribute("data-id").toString()
@@ -134,7 +126,16 @@ async function deleteGroup(event){
 
         items_list[i-1].append(copy)
     }
-    if (items_list[items_list.length-1].getElementsByClassName("group_card").length === 0){
+    let len = -1;
+    try {
+        len = items_list[items_list.length-1].getElementsByClassName("group_card").length
+    }
+    catch (e) {
+        if (e.name.toString() === "TypeError"){
+            return
+        }
+    }
+    if (len === 0){
         let car_items = document.getElementsByClassName("carousel-item");
         let last_car_item = car_items[car_items.length-1];
         if (last_car_item.getAttribute("class").toString() === "carousel-item active"){
@@ -199,9 +200,11 @@ function createGroupHTML(inside, new_id, data_id){
 
     butt = document.createElement("div");
     butt.setAttribute("class", "delete_card card_but");
-    butt.setAttribute("data-id", `${new_id.toString()}`)
-    butt.onclick = function (event) {
-            deleteGroup(event);
+    butt.setAttribute("data-id", `${new_id.toString()}`);
+    butt.setAttribute("data-bs-target", "#approveModal");
+    butt.setAttribute("data-bs-toggle", "modal");
+    butt.onclick = async function (event) {
+        await onClickDelete(event);
     }
     let icon = document.createElement("i")
     icon.setAttribute("class", "bi bi-x-lg")
@@ -282,6 +285,19 @@ async function changeNameGroup(){
     }
 }
 
+async function onClickDelete(event) {
+    let old_id = ""
+    try{
+        old_id = event.target.getAttribute("data-id").toString();
+    }
+    catch (e){
+        if (e.name.toString() === "TypeError"){
+            old_id = event.target.parentNode.getAttribute("data-id").toString();
+        }
+    }
+    localStorage.setItem("GroupToDelete", old_id);
+}
+
 function onload_groups(){
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
@@ -313,9 +329,14 @@ function onload_groups(){
 
     let delete_buts = document.getElementsByClassName("delete_card")
     for (let i = 0; i < delete_buts.length; i++){
-        delete_buts[i].onclick = function (event) {
-            deleteGroup(event);
+        delete_buts[i].onclick = async function (event) {
+            await onClickDelete(event);
         }
+    }
+
+    let approve_but = document.getElementById("approveModal").getElementsByClassName("approve")[0];
+    approve_but.onclick = async function() {
+        await deleteGroup()
     }
 }
 
