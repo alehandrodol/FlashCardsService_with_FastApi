@@ -407,12 +407,23 @@ main{
 
 @media (max-width: 1201px){
     .test_card {
-        width: 59px;
-        height: 59px;
+        width: 59px !important;
+        height: 59px !important;
     }
 
     .delete_card {
-        height: 59px;
-        width: 74px;
+        height: 59px !important;
+        width: 74px !important;
+    }
+}
+@media (max-height: 1201px){
+    .test_card {
+        width: 59px !important;
+        height: 59px !important;
+    }
+
+    .delete_card {
+        height: 59px !important;
+        width: 74px !important;
     }
 }

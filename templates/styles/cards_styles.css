@@ -196,6 +196,11 @@ h2 {
     font-family: 'Open Sans', sans-serif;
 }
 
+.off_card {
+    background-color: #ebebeb !important;
+    border-color: #7a7a7a !important;
+}
+
 @media (max-height: 801px){
     #main_cards {
         height: 560px;

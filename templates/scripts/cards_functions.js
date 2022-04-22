@@ -64,6 +64,7 @@ function rollBack(){
     btn_create.setAttribute('data-bs-toggle', "modal");
     btn_edit.removeAttribute("onclick");
     btn_edit.setAttribute("onclick", "edit_button_behav()")
+    rel();
 }
 
 async function rollBack2(){
@@ -226,7 +227,10 @@ function createCardHTML(card_id, text, is_active){
     }
     object.setAttribute("data-bs-target", "#cardModal");
     object.setAttribute("data-bs-toggle", "modal")
-    if (card_id % 2 === 0){
+    if (!is_active) {
+        object.setAttribute("class", "term_card off_card");
+    }
+    else if (card_id % 2 === 0){
         object.setAttribute("class", "term_card even_term");
     }
     else{

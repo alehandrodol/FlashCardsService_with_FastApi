@@ -33,6 +33,7 @@ function changeFuncs(){
     let btn_create = document.getElementById("create");
     let a = document.getElementsByClassName("card_main");
     for (let i = 0; i < a.length; i++) {
+        a[i].style.outline = "0";
         a[i].removeAttribute("data-bs-toggle");
         let data_id = a[i].parentElement.parentElement.getAttribute("data-id");
         a[i].onclick = function () {main_cards(data_id, a[i].innerText)}
@@ -79,6 +80,7 @@ function edit_button_behav(){
             }
             localStorage.setItem("currentBackGroup", `${curBackID}`);
         }
+        a[i].style.outline = "3px solid #EF9452";
         a[i].setAttribute("data-bs-toggle", "modal");
     }
 
