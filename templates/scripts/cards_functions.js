@@ -26,6 +26,7 @@ function edit_button_behav(){
         await editCard();
     }
 
+    btn_create.removeAttribute("onclick");
     btn_create.removeAttribute('data-bs-toggle')
     btn_create.setAttribute("onclick", "rollBack()")
     btn_edit.removeAttribute("onclick");
@@ -62,6 +63,14 @@ function rollBack(){
     localStorage.removeItem("curBackIdCard");
     btn_create.removeAttribute("onclick");
     btn_create.setAttribute('data-bs-toggle', "modal");
+    btn_create.onclick = function() {
+        let myMod = document.getElementById("myModal");
+        let modInputs = myMod.getElementsByClassName("form-control");
+        modInputs[0].value = "";
+        modInputs[1].value = "";
+        modInputs[2].innerText = "";
+    }
+
     btn_edit.removeAttribute("onclick");
     btn_edit.setAttribute("onclick", "edit_button_behav()")
     rel();
@@ -302,6 +311,35 @@ async function cards_data(group_id){
 function onload_cards(){
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
+    let myMod = document.getElementById("myModal");
+    let modInputs = myMod.getElementsByClassName("form-control");
+    modInputs[0].addEventListener("keypress", function onEvent(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            modInputs[1].focus();
+        }
+    });
+    modInputs[1].addEventListener("keypress", function onEvent(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            modInputs[2].focus();
+        }
+    });
+    let approve2 = myMod.getElementsByClassName("approve2")[0];
+    modInputs[2].addEventListener("keypress", function onEvent(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            approve2.click();
+        }
+    });
+    let btn_create = document.getElementById("create");
+    btn_create.onclick = function() {
+        let myMod = document.getElementById("myModal");
+        let modInputs = myMod.getElementsByClassName("form-control");
+        modInputs[0].value = "";
+        modInputs[1].value = "";
+        modInputs[2].innerText = "";
+    }
 }
 
 document.addEventListener("DOMContentLoaded", async function() {

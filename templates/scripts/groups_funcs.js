@@ -39,10 +39,24 @@ function changeFuncs(){
         a[i].onclick = function () {main_cards(data_id, a[i].innerText)}
     }
 
+    let changed_list = localStorage.getItem("changed_list");
+    if (changed_list !== null){
+        changed_list = JSON.parse(changed_list);
+        for (let i = 0; i < changed_list.length; i++){
+            let container = document.getElementById(changed_list[i]["frontId"]);
+            container.firstChild.firstChild.firstChild.firstChild.innerText = changed_list[i]["old_name"];
+        }
+    }
+
     localStorage.removeItem("currentBackGroup");
     localStorage.removeItem("currentChangingGroup");
     btn_create.removeAttribute("onclick");
     btn_create.setAttribute('data-bs-toggle', "modal");
+    btn_create.onclick = function() {
+        let myMod = document.getElementById("myModal");
+        let modInputs = myMod.getElementsByClassName("form-control");
+        modInputs[0].value = "";
+    }
     btn_edit.textContent = "Редактировать";
     btn_create.textContent = "Создать";
     btn_edit.removeAttribute("onclick");
@@ -50,8 +64,22 @@ function changeFuncs(){
 }
 
 
-function editButSecond() {
-    console.log("Я типа отправил запросы на изменение ;)");
+async function editButSecond() {
+    let changed_list = JSON.parse(localStorage.getItem("changed_list"));
+    for (let i = 0; i < changed_list.length; i++){
+        if (changed_list[i]["old_name"] !== changed_list[i]["new_name"] && changed_list[i]["new_name"] !== undefined){
+            console.log(changed_list[i]["new_name"]);
+            let response = await fetch(`/group/edit_group?group_id=${changed_list[i]["backId"]}`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${localStorage.getItem("token")}`
+                },
+                body: JSON.stringify({"name": changed_list[i]["new_name"]})
+            })
+        }
+    }
+    localStorage.removeItem("changed_list");
     changeFuncs();
 }
 
@@ -64,30 +92,53 @@ function edit_button_behav(){
     let a = document.getElementsByClassName("card_main");
     for (let i = 0; i < a.length; i++) {
         a[i].onclick = function (event) {
-            let curID = event.target.parentElement.parentElement.parentElement.parentElement.id;
+            let curID = event.target.parentElement.parentElement.parentElement.parentElement.id; // .group_card_container.id from div (.cardMainSpan)
             if (curID === ""){
-                curID = event.target.parentElement.parentElement.parentElement.id
+                curID = event.target.parentElement.parentElement.parentElement.id; // .group_card_container.id from button (.card_main)
             }
-            localStorage.setItem("currentChangingGroup", `${curID}`);
+
+            let old_name = event.target.innerText;
+
             let curBackID = "";
             try {
-                curBackID = event.target.parentElement.parentElement.getAttribute("data-id").toString();
+                curBackID = event.target.parentElement.parentElement.getAttribute("data-id").toString(); // .group_card.data-id from div (.cardMainSpan)
             }
             catch (e) {
                 if (e.name.toString() === "TypeError"){
-                    curBackID = event.target.parentElement.parentElement.parentElement.getAttribute("data-id").toString();
+                    curBackID = event.target.parentElement.parentElement.parentElement.getAttribute("data-id").toString(); // .group_card.data-id from button (.card_main)
                 }
             }
-            localStorage.setItem("currentBackGroup", `${curBackID}`);
+
+            let changed_list = JSON.parse(localStorage.getItem("changed_list"));
+            if (changed_list === null){
+                 changed_list = [];
+            }
+            let changed_group = {"backId": curBackID, "frontId": curID, "old_name": old_name};
+            changed_list.push(changed_group);
+            localStorage.setItem("changed_list", JSON.stringify(changed_list));
+
+            let modal = document.getElementById("changeGroup");
+            let input = modal.getElementsByClassName("form-control")[0];
+            input.value = old_name;
         }
         a[i].style.outline = "3px solid #EF9452";
         a[i].setAttribute("data-bs-toggle", "modal");
     }
 
+    btn_create.removeAttribute("onclick");
     btn_create.removeAttribute('data-bs-toggle');
     btn_create.setAttribute("onclick", "changeFuncs()")
     btn_edit.removeAttribute("onclick")
     btn_edit.setAttribute("onclick", "editButSecond()")
+}
+
+function changeNameGroup(){
+    let text = document.getElementById("new-group-name").value
+    let changed_list = JSON.parse(localStorage.getItem("changed_list"));
+    changed_list[changed_list.length - 1]["new_name"] = text;
+    localStorage.setItem("changed_list", JSON.stringify(changed_list));
+    let curGroup = document.getElementById(`${changed_list[changed_list.length - 1]["frontId"]}`)
+    curGroup.firstChild.firstChild.firstChild.firstChild.innerText = text
 }
 
 async function deleteGroup(){
@@ -270,22 +321,6 @@ function createCarouselItem(id_start){
     return new_item
 }
 
-async function changeNameGroup(){
-    let text = document.getElementById("new-group-name").value
-    let response = await fetch(`/group/edit_group?group_id=${localStorage.getItem("currentBackGroup")}`, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`
-        },
-        body: JSON.stringify({"name": text})
-    })
-    if (response.status === 200){
-        let curGroup = document.getElementById(`${localStorage.getItem("currentChangingGroup")}`)
-        curGroup.firstChild.firstChild.firstChild.firstChild.innerText = text;
-    }
-}
-
 async function onClickDelete(event) {
     let old_id = ""
     try{
@@ -310,6 +345,7 @@ function onload_groups(){
     let inputName = myMod.getElementsByClassName("form-control")[0];
     inputName.addEventListener("keypress", function onEvent(event) {
         if (event.key === "Enter") {
+            event.preventDefault();
             createGroupBut.click();
         }
     });
@@ -324,6 +360,7 @@ function onload_groups(){
     inputName = changeGroupMod.getElementsByClassName("form-control")[0];
     inputName.addEventListener("keypress", function onEvent(event) {
         if (event.key === "Enter") {
+            event.preventDefault();
             changeNameBut.click();
         }
     });
@@ -338,6 +375,13 @@ function onload_groups(){
     let approve_but = document.getElementById("approveModal").getElementsByClassName("approve")[0];
     approve_but.onclick = async function() {
         await deleteGroup()
+    }
+
+    let btn_create = document.getElementById("create");
+    btn_create.onclick = function() {
+        let myMod = document.getElementById("myModal");
+        let modInputs = myMod.getElementsByClassName("form-control");
+        modInputs[0].value = "";
     }
 }
 
