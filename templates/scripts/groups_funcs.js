@@ -47,6 +47,7 @@ function changeFuncs(){
             container.firstChild.firstChild.firstChild.firstChild.innerText = changed_list[i]["old_name"];
         }
     }
+    localStorage.removeItem("changed_list");
 
     localStorage.removeItem("currentBackGroup");
     localStorage.removeItem("currentChangingGroup");
@@ -85,6 +86,7 @@ async function editButSecond() {
 
 
 function edit_button_behav(){
+    localStorage.removeItem("changed_list");
     let btn_edit = document.getElementById("edit");
     let btn_create = document.getElementById("create");
     btn_edit.textContent = "Сохранить";
