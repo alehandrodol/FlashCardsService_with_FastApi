@@ -325,13 +325,6 @@ function onload_cards(){
             modInputs[2].focus();
         }
     });
-    let approve2 = myMod.getElementsByClassName("approve2")[0];
-    modInputs[2].addEventListener("keypress", function onEvent(event) {
-        if (event.key === "Enter") {
-            event.preventDefault();
-            approve2.click();
-        }
-    });
     let btn_create = document.getElementById("create");
     btn_create.onclick = function() {
         let myMod = document.getElementById("myModal");

@@ -1,3 +1,5 @@
+import re
+
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 
@@ -34,6 +36,9 @@ async def create_group(group: GroupCreate,
 
     if len(group.name) < 1:
         raise HTTPException(status_code=400, detail="Name of group must be not empty")
+
+    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9№\[\]\\/.,!@#$%^&*_+={}:;`\'"?~|<>-]*$', group.name) is None:
+        raise HTTPException(status_code=400, detail="You have used unsupported symbol")
 
     db_group = Group(
         name=group.name,
@@ -112,6 +117,9 @@ async def edit_group(group_id: int, new_group: GroupBase,
 
     if len(new_group.name) < 1:
         raise HTTPException(status_code=400, detail="Name of group must be not empty")
+
+    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9№\[\]\\/.,!@#$%^&*_+={}:;`\'"?~|<>-]*$', new_group.name) is None:
+        raise HTTPException(status_code=400, detail="You have used unsupported symbol")
 
     group: Group = db.query(Group).filter(Group.id == group_id).first()
     group.name = new_group.name

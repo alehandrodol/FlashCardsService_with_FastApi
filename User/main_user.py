@@ -1,3 +1,5 @@
+import re
+
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
@@ -27,6 +29,22 @@ async def register(form_data: OAuth2PasswordRequestForm = Depends(), db: Session
 
     if user:
         raise HTTPException(status_code=400, detail="User already exist")
+
+    if not 8 <= len(form_data.password) <= 50:
+        raise HTTPException(status_code=400, detail="Password lenght must be not less than 8 and no more than 50")
+
+    if not len(form_data.username) > 0:
+        raise HTTPException(status_code=400, detail="Username must not be empty")
+
+    if re.search(r'^[a-zA-Z0-9!@#$%^&*_+={}:;`\'"?~|<>-]*$', form_data.username) is None:
+        raise HTTPException(status_code=400,
+                            detail="Bad login: Use only latin letters or may be you use some exotic symbols")
+
+    if re.search(r'^(?=.*[0-9])(?=.*[!@#$%^&*_+={}:;`"?~|<>-])[a-zA-Z0-9!@#$%^&*_+={}:;`\'"?~|<>-]*$',
+                 form_data.password) is None:
+        raise HTTPException(status_code=400,
+                            detail="Password should contain at least one number and one special character "
+                                   "(or you use unsupported character)")
 
     hashed_pwd = pwd_context.hash(form_data.password)
     db_user = User(
