@@ -55,7 +55,13 @@ async function back_to_groups(){
             localStorage.removeItem("backTerm");
             localStorage.removeItem("card_id");
             localStorage.removeItem("TestEnd");
+            localStorage.removeItem("trueVer");
+            localStorage.removeItem("falseVer");
             document.cookie = "card_dict=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        }
+        if (window.location.href.includes("/cards")){
+            localStorage.removeItem("curBackIdCard");
+            localStorage.removeItem("curFrontIdCard");
         }
         window.history.pushState({},"", "/groups");
         rel();
