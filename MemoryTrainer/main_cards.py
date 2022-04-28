@@ -223,8 +223,8 @@ async def deactivate_cards_by_id(id_list: List[int],
     return status.HTTP_200_OK
 
 
-@router.get("/not_active_cards/{group_id}", response_class=JSONResponse)
-async def get_not_active_cards(group_id: int,
+@router.get("/active_or_not_cards/{group_id}", response_class=JSONResponse)
+async def get_not_active_cards(group_id: int, is_active: bool,
                                current_user: User = Depends(get_current_user),
                                db: Session = Depends(get_db)) -> List[int]:
     """This function returns cards_id as List from given group"""
@@ -235,8 +235,10 @@ async def get_not_active_cards(group_id: int,
     if not check_group(group_id=group_id, db=db, current_user=current_user):
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
 
+    print("KU-Ku")
+
     result: List[int] = []
-    temp_list: List[Card] = db.query(Card).filter(Card.active == False, Card.group_id == group_id).all()
+    temp_list: List[Card] = db.query(Card).filter(Card.active == is_active, Card.group_id == group_id).all()
     for card in temp_list:
         result.append(card.id)
     return result

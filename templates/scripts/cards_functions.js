@@ -122,7 +122,7 @@ async function rollBack2(){
     }
     checkboxes = document.getElementsByClassName("toActivate");
     let group_id = localStorage.getItem("group_id");
-    let not_active_cards = await fetch(`/cards/not_active_cards/${group_id}`, {
+    let not_active_cards = await fetch(`/cards/active_or_not_cards/${group_id}?is_active=false`, {
         method: "GET",
         headers: {
                 "Content-Type": "application/json",

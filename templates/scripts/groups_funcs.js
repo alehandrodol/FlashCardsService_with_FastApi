@@ -15,8 +15,22 @@ async function start_test(event){
     if (group_card.getAttribute("data-id") === null){
         group_card = event.target.parentElement.parentElement;
     }
-    localStorage.setItem("group_id", group_card.getAttribute("data-id"));
+    let group_id = group_card.getAttribute("data-id");
+    localStorage.setItem("group_id", group_id);
     let group_name = group_card.getElementsByClassName("cardMainSpan")[0].innerText;
+
+    let try_resp = await fetch(`/cards/active_or_not_cards/${group_id}?is_active=true`, {
+        method: "GET",
+        headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    })
+    let active_cards_list = JSON.parse((await try_resp.text()).toString())
+    if (active_cards_list.length === 0){
+        alert("У вас нету карт в данной группе или ни одна из них неактивна")
+        return
+    }
 
     let response = await fetch(`/testing?group_name=${group_name}`, {
             method: "GET"

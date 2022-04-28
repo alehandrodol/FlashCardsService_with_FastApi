@@ -16,6 +16,9 @@ async function nextCard() {
     if (response.status === 200){
         let data = JSON.parse((await response.text()).toString())
         let term = document.getElementById("term_of_card");
+        if (term.innerText === localStorage.getItem("backTerm")){
+            term.click();
+        }
         term.innerText = data.front;
         localStorage.setItem("frontTerm", data.front);
         localStorage.setItem("backTerm", data.back);
