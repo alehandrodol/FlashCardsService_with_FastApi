@@ -81,9 +81,11 @@ function changeFuncs(){
 
 async function editButSecond() {
     let changed_list = JSON.parse(localStorage.getItem("changed_list"));
+    if (changed_list === null){
+        changed_list = [];
+    }
     for (let i = 0; i < changed_list.length; i++){
         if (changed_list[i]["old_name"] !== changed_list[i]["new_name"] && changed_list[i]["new_name"] !== undefined){
-            console.log(changed_list[i]["new_name"]);
             let response = await fetch(`/group/edit_group?group_id=${changed_list[i]["backId"]}`, {
                 method: "POST",
                 headers: {
@@ -187,10 +189,6 @@ async function deleteGroup(){
         let next_group = items_list[i].getElementsByClassName("group_card_container")[0]
         let copy = next_group
         next_group.remove()
-        let del_but = copy.getElementsByClassName("delete_card")[0];
-        del_but.onclick = function (event) {
-            deleteGroup(event);
-        }
 
         items_list[i-1].append(copy)
     }

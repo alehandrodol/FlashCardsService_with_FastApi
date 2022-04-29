@@ -49,10 +49,10 @@ async def create_card(card: CardCreate,
     if len(card.back) > 200:
         raise HTTPException(status_code=400, detail="Too long back part of the card")
 
-    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9.,№\[\]\\/!@#$%^&*_+={}:;`\'"?~|<>-]*$', card.front) is None:
+    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9.,№\[\]\\/! @#$%^&*_+={}:;`\'"?~|<>-]*$', card.front) is None:
         raise HTTPException(status_code=400, detail="You have used unsupported symbol in front")
 
-    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9.,№\[\]\\/!@#$%^&*_+={}:;`\'"?~|<>-]*$', card.back) is None:
+    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9.,№\[\]\\/! @#$%^&*_+={}:;`\'"?~|<>-]*$', card.back) is None:
         raise HTTPException(status_code=400, detail="You have used unsupported symbol in back")
 
     is_group_exist = check_group(group_id=card.group_id, current_user=current_user, db=db)
@@ -286,10 +286,10 @@ async def edit_card(card_id: int, new_card: CardBase,
     if len(new_card.front) < 1:
         raise HTTPException(status_code=400, detail="Front part of the card must not be empty")
 
-    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9.,№\[\]\\/!@#$%^&*_+={}:;`\'"?~|<>-]*$', new_card.front) is None:
+    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9.,№\[\]\\/! @#$%^&*_+={}:;`\'"?~|<>-]*$', new_card.front) is None:
         raise HTTPException(status_code=400, detail="You have used unsupported symbol in front")
 
-    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9.,№\[\]\\/!@#$%^&*_+={}:;`\'"?~|<>-]*$', new_card.back) is None:
+    if re.search(r'^[\u0400-\u04FFa-zA-Z0-9.,№\[\]\\/! @#$%^&*_+={}:;`\'"?~|<>-]*$', new_card.back) is None:
         raise HTTPException(status_code=400, detail="You have used unsupported symbol in back")
 
     group_id = get_group_card(card_id=card_id, db=db)
