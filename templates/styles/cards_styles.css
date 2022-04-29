@@ -190,6 +190,19 @@ h2 {
     border-color: #7a7a7a !important;
 }
 
+#div_stats{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center !important;
+    background-color: #351C45 !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+.card_stats{
+    margin-top: 0.5rem !important;
+}
+
 @media (max-height: 801px){
     #main_cards {
         height: 560px;

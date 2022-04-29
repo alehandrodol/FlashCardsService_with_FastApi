@@ -83,7 +83,9 @@ async def get_card(given_id: int,
         back=card.back,
         id=card.id,
         group_id=card.group_id,
-        descriptionText=card.descriptionText
+        descriptionText=card.descriptionText,
+        repeats=card.repeats,
+        true_verdicts=card.true_verdicts
     )
     return res_card
 

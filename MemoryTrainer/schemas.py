@@ -15,6 +15,8 @@ class CardCreate(CardBase):
 class CardShow(CardBase):
     id: int = -1
     group_id: int = -1
+    true_verdicts: int
+    repeats: int
 
 
 class Card(CardBase):
@@ -23,6 +25,8 @@ class Card(CardBase):
     date: datetime
     repeats: int
     active: bool
+    true_verdicts: int = 0
+    repeats: int = 0
 
     class Config:
         orm_mode = True

@@ -31,10 +31,13 @@ async function cardFiller(card_id = -1, modalName){
     let textarea2 = modal_card.getElementsByClassName("back_card")[0];
     let description = modal_card.getElementsByClassName("card_description")[0];
     if (modalName === "cardModal"){
+        let stats = modal_card.getElementsByClassName("card_stats");
         textarea.innerText = response.front.toString();
         textarea2.innerText = response.back;
         title.innerText = document.getElementById("page_name").innerText
         description.innerText = response.descriptionText;
+        stats[0].innerText = `Кол-во успешных повторений: ${response.true_verdicts}`
+        stats[1].innerText = `Кол-во повторений: ${response.repeats}`
     }
     else if (modalName === "myModal"){
         textarea.value = response.front.toString();
