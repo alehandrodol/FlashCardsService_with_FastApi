@@ -131,7 +131,9 @@ async def get_next_card(group_id: int,
         back=card.back,
         id=card.id,
         group_id=card.group_id,
-        descriptionText=card.descriptionText
+        descriptionText=card.descriptionText,
+        true_verdicts=card.true_verdicts,
+        repeats=card.repeats
     )
     return show_card
 

@@ -15,8 +15,8 @@ class CardCreate(CardBase):
 class CardShow(CardBase):
     id: int = -1
     group_id: int = -1
-    true_verdicts: int
-    repeats: int
+    true_verdicts: int = 0
+    repeats: int = 0
 
 
 class Card(CardBase):

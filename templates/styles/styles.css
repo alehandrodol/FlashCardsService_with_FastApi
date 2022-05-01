@@ -60,3 +60,7 @@ footer p{
   -webkit-user-select: none;
   user-select: none;
 }
+
+#loadOverlay{
+    display: none;
+}

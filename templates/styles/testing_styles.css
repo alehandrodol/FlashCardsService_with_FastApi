@@ -159,6 +159,19 @@ main {
     box-shadow:0 0 8px rgba(50, 50, 50, 0.6);
 }
 
+#div_stats{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center !important;
+    background-color: #351C45 !important;
+    border: 2px solid #FFFFFF !important;
+}
+
+.card_stats{
+    margin-top: 0.5rem !important;
+}
+
 @media (max-width: 1500px){
     #term_of_card {
         width: 100%;

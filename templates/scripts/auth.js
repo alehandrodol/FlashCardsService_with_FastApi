@@ -123,6 +123,21 @@ async function registration(){
         if (response.status === 200) {
             alert("Успешно!");
             document.getElementById("cancel").click();
+            let resp_token = await fetch("/token", {
+            method: "POST",
+            body: new FormData(document.querySelector("form"))
+        })
+            if (resp_token.status === 200) {
+                let data = await resp_token.json();
+                let creation = await fetch("/group/create_group", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${data.access_token}`
+                    },
+                    body: `{"name" : "Я тестовая группа"}`
+                });
+            }
         }
         else if (response.status === 400)
             alert(response.statusText)
