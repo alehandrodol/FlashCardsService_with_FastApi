@@ -4,6 +4,7 @@ import re
 import uvicorn
 from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
 from fastapi.responses import HTMLResponse, RedirectResponse, PlainTextResponse
+from starlette.responses import FileResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
@@ -28,6 +29,13 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="templates"), name="static")
 
 templates = Jinja2Templates(directory="templates")
+
+favicon_path = 'favicon.ico'
+
+
+@app.get('/favicon.ico', include_in_schema=False)
+async def favicon():
+    return FileResponse(favicon_path)
 
 
 # def gener_html(path: str) -> str:

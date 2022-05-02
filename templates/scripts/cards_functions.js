@@ -333,6 +333,12 @@ function onload_cards(){
         modInputs[1].value = "";
         modInputs[2].innerText = "";
     }
+    myMod.addEventListener("keypress", function onEvent(event) {
+        if (event.key === "Enter" && document.activeElement === myMod) {
+            event.preventDefault();
+            document.getElementsByClassName("approve2")[0].click();
+        }
+    });
 }
 
 document.addEventListener("DOMContentLoaded", async function() {

@@ -47,14 +47,14 @@ function put_stats(){
     let par = document.getElementById("test_stats");
     let trueVer = Number(localStorage.getItem("trueVer"));
     let falseVer = Number(localStorage.getItem("falseVer"));
-    if (trueVer % 10 >= 5 || [11, 12, 13, 14].indexOf(trueVer) || trueVer % 10 === 0){
-        par.innerText = `Ты запомнил: ${trueVer} карточек`;
+    if (trueVer % 10 >= 5 || [11, 12, 13, 14].indexOf(trueVer) !== -1 || trueVer % 10 === 0){
+        par.innerText = `Вы запомнили: ${trueVer} карточек`;
     }
     else if (trueVer % 10 === 1){
-        par.innerText = `Ты запомнил: ${trueVer} карточку`;
+        par.innerText = `Вы запомнили: ${trueVer} карточку`;
     }
     else {
-        par.innerText = `Ты запомнил: ${trueVer} карточки`;
+        par.innerText = `Вы запомнили: ${trueVer} карточки`;
     }
     par.innerText = par.innerText + `\nА всего их было: ${falseVer+trueVer}`;
 }

@@ -120,29 +120,64 @@ async function registration(){
             method: "POST",
             body: new FormData(document.querySelector("form"))
         })
-        if (response.status === 200) {
-            alert("Успешно!");
-            document.getElementById("cancel").click();
-            let resp_token = await fetch("/token", {
+        if (response.status !== 200) {
+            alert(response.statusText)
+            return;
+        }
+        alert("Успешно!");
+        document.getElementById("cancel").click();
+        let resp_token = await fetch("/token", {
             method: "POST",
             body: new FormData(document.querySelector("form"))
         })
-            if (resp_token.status === 200) {
-                let data = await resp_token.json();
-                let creation = await fetch("/group/create_group", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${data.access_token}`
-                    },
-                    body: `{"name" : "Я тестовая группа"}`
-                });
-            }
+        if (resp_token.status !== 200) {
+            alert(resp_token.statusText);
+            return
         }
-        else if (response.status === 400)
-            alert(response.statusText)
-        else
-            alert("Упс, неизвестная ошибка")
+        let data = await resp_token.json();
+        let group_creation = await fetch("/group/create_group", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${data.access_token}`
+            },
+            body: `{"name" : "Я есть инструкция"}`
+        });
+        if (group_creation.status !== 200){
+            alert(group_creation.statusText);
+            return
+        }
+        let card_creation = await fetch("/cards/create_card", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${data.access_token}`
+            },
+            body: JSON.stringify({
+                "front": "Прочитай меня",
+                "back": "Я пример того, как будут выглядеть твои карточки",
+                "descriptionText": "\tВ данном сервисе ты можешь создавать подобные карточки, а потом тестировать себя," +
+                    " и смотреть, как хорошо ты их запомнил! \n\n\tТы можешь: групировать по темам, как тебе это удобно," +
+                    " изменять как названия групп, так и всю информацию внутри карточки, ты можешь их удалять " +
+                    "с помощью краcной галочки при нажатии кнопки 'редактировать', а потом 'применить', ты можешь делать " +
+                    "их активными и неактивными, это делается также как и удаление, только с зелёной галочкой. (В случае" +
+                    " когда карта неактивна, она не будет попадаться вам во время тестирования данной группы)\n" +
+                    "Если не совсем понятно, давай объясню, представь ты учишь слова по английскому и ты на листочке" +
+                    " пишешь слова, а на обратной стороне их перевод, примерно так это и работает. А теперь дополним " +
+                    "ситуацию, ещё тебе нужно подготовиться к экзамену по геометрии, и тебе нужно учить определения, теоремы" +
+                    " и свойства, пожалуйста, создай новую группу карточек, и пиши там всё про геометрию.\n\tКрайне советуем " +
+                    "при создании карточки в поле ответ писать карткий ответ, просто для проверки себя, что вы правильно помните, а" +
+                    " уже в поле для описания, писать всю полную информацию, которая лучше поможет вам запонмить нужный ответ.\n\n\t" +
+                    "В ближвйшем будущем в описание можно будет добавлять картинки и в целом весь функционал будет расширяться, " +
+                    "просто немного терпения ;)\n\nP.S. Стоит отметить важный ньюанс, когда вы повторяете карточки, карточки" +
+                    " будут автоматически отключаться, если кол-во 'правильных' повторений неменьше 5 и кол-во 'правильных'" +
+                    " повторений неменьше половины от всего кол-ва повторений. В будущем вы сможете изменить данную систему.",
+                 "group_id": (JSON.parse(await group_creation.json())).group_id
+            })
+        });
+        if (card_creation.status !== 200){
+            alert("Произошла ошибка при создании карточки инструкции!")
+        }
 }
 
 function onload(){
