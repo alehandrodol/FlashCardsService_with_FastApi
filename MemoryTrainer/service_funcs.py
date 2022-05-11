@@ -1,4 +1,4 @@
-from typing import List, Dict, Union, Optional
+from typing import List, Dict, Tuple, Union, Optional
 from json import dumps
 
 from fastapi import Depends, Response
@@ -44,3 +44,59 @@ def get_group_card(card_id: int, db: Session):
     if card is None:
         return None
     return card.group_id
+
+
+def binary_search(lys, val):
+    first = 0
+    last = len(lys) - 1
+    index = -1
+    while (first <= last) and (index == -1):
+        mid = (first + last) // 2
+        if lys[mid] == val:
+            index = mid
+        else:
+            if val < lys[mid]:
+                last = mid - 1
+            else:
+                first = mid + 1
+    return index
+
+
+def find_largest_substring(str1: str, str2: str) -> Optional[Tuple[int, int]]:
+    len_2 = len(str2)
+    if len_2 == 0:
+        return None
+    if len_2 < 3:
+        return str1.index(str2), len_2
+    matrix: List[List[int]] = [[] for x in range(len_2-2)]
+    for part_ind in range(len_2-2):
+        part = str2[part_ind:part_ind+3]
+        start = 0
+        while True:
+            try:
+                find_ind = str1.index(part, start)
+            except ValueError:
+                break
+            start = find_ind + 1
+            matrix[part_ind].append(find_ind)
+
+    max_len = -1
+    max_ind = -1
+    for i in range(len(matrix)-1):
+        for j in range(len(matrix[i])):
+            cur_len = 3
+            cur_list_ind = i
+            cur_elem = matrix[i][j]
+            bin_s = binary_search(matrix[cur_list_ind+1], cur_elem+1)
+            while bin_s != -1:
+                cur_len += 1
+                cur_elem += 1
+                cur_list_ind += 1
+                if cur_list_ind + 1 < len_2-2:
+                    bin_s = binary_search(matrix[cur_list_ind + 1], cur_elem + 1)
+                else:
+                    break
+            if cur_len > max_len:
+                max_len = cur_len
+                max_ind = matrix[i][j]
+    return max_ind, max_len

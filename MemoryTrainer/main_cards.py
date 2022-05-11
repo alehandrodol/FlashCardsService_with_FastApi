@@ -14,13 +14,14 @@ from User.models import User
 from User.user_manager import get_current_user
 
 from Group.service_funcs import check_group
+from Group.models import Group
 
 from core.database import get_db
 
 from .models import Card
-from .schemas import CardCreate, CardShow, CardBase
+from .schemas import CardCreate, CardShow, CardBase, FindString
 from .service_funcs import delete_card_service, \
-    get_group_cards_service, add_and_refresh_db, get_group_card
+    get_group_cards_service, add_and_refresh_db, get_group_card, find_largest_substring
 
 router = APIRouter()
 
@@ -67,6 +68,31 @@ async def create_card(card: CardCreate,
     add_and_refresh_db(db_card, db)
     new_id = db.query(Card).filter(Card.group_id == card.group_id).order_by(Card.id.desc()).first().id
     return dumps({"status": 200, "card_id": new_id, "active": True})
+
+
+@router.get("/find_by_string", response_model=JSONResponse)
+async def find_cards(string_model: FindString,
+                     current_user: User = Depends(get_current_user),
+                     db: Session = Depends(get_db)) -> List[Card]:
+    string = string_model.string
+    user_groups = db.query(Group).filter(Group.user_id == current_user.id).all()
+    res_list: List[Card] = []
+    for group in user_groups:
+        cards: List[Card] = db.query(Card).filter(Card.group_id == group.id).all()
+        for cur_card in cards:
+            find_on_front = find_largest_substring(cur_card.front, string)
+            if find_on_front != (-1, -1):
+                res_list.append(cur_card)
+                continue
+            find_on_back = find_largest_substring(cur_card.back, string)
+            if find_on_back != (-1, -1):
+                res_list.append(cur_card)
+                continue
+            find_on_desc = find_largest_substring(cur_card.descriptionText, string)
+            if find_on_desc != (-1, -1):
+                res_list.append(cur_card)
+                continue
+    return res_list
 
 
 @router.get("/get_card", response_model=CardShow)

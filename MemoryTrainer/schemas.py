@@ -30,3 +30,7 @@ class Card(CardBase):
 
     class Config:
         orm_mode = True
+
+
+class FindString(BaseModel):
+    string: str
