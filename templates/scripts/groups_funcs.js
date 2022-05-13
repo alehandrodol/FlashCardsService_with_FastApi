@@ -397,6 +397,8 @@ function onload_groups(){
         let modInputs = myMod.getElementsByClassName("form-control");
         modInputs[0].value = "";
     }
+
+    bind_searchBut();
 }
 
 async function group_content(){

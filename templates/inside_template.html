@@ -4,5 +4,7 @@
     {% include 'groups.html' %}
 {% elif path|string() == 'cards' %}
     {% include 'cards_page.html' %}
+{% elif path|string() == 'search' %}
+    {% include 'cards_page.html' %}
 {% endif %}
 {% include 'footer.html' %}

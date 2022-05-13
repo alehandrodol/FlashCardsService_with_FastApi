@@ -308,6 +308,29 @@ async function cards_data(group_id){
     }
 }
 
+async function search_data(){
+    let response = (await fetch(`/cards/find_by_string?string=${document.getElementById("page_name").innerText}`, {
+        method: "GET",
+        headers: {
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    }))
+    if (response.status === 200){
+        let search_data = JSON.parse((await response.text()).toString())
+        let cont = document.getElementById("cards_container");
+        let card_id_to_group_name = {}
+        for (let i = search_data.length-1; i >= 0; i--){
+            let cur_card = search_data[i][0];
+            card_id_to_group_name[cur_card.id.toString()] = search_data[i][2];
+            let new_card = createCardHTML((search_data.length-1 - i), cur_card.front, cur_card.active);
+            new_card.setAttribute("data-id", `${cur_card.id}`)
+            cont.append(new_card);
+        }
+        localStorage.setItem("id_to_name", JSON.stringify(card_id_to_group_name));
+        onload_cards();
+    }
+}
+
 function onload_cards(){
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
@@ -339,9 +362,19 @@ function onload_cards(){
             document.getElementsByClassName("approve2")[0].click();
         }
     });
+
+    bind_searchBut();
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
-    let cur_id = localStorage.getItem("group_id");
-    await cards_data(cur_id);
+    if (window.location.href.includes("/cards")){
+        let cur_id = localStorage.getItem("group_id");
+        await cards_data(cur_id);
+    }
+    else if (window.location.href.includes("/search?")){
+        document.getElementsByClassName("group_buttons")[0].style.display = "none";
+        document.getElementById("cards_container").style.height = "90%";
+        document.getElementById("main_cards").style.height = "75vh";
+        await search_data()
+    }
 });

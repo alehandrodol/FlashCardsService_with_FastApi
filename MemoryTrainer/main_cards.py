@@ -6,7 +6,7 @@ from fastapi import APIRouter, Depends, status, HTTPException, Response, Cookie
 from fastapi.responses import JSONResponse
 from sqlalchemy.orm import Session
 
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Tuple
 from random import randint
 from json import loads, dumps
 
@@ -73,10 +73,10 @@ async def create_card(card: CardCreate,
 @router.get("/find_by_string")
 async def find_cards(string: str,
                      current_user: User = Depends(get_current_user),
-                     db: Session = Depends(get_db)) -> List[Card]:
+                     db: Session = Depends(get_db)) -> List[Tuple[Card, int, str]]:
     user_groups = db.query(Group).filter(Group.user_id == current_user.id).all()
     min_len = float("inf")
-    res_list: List[Card] = []
+    res_list: List[Tuple[Card, int, str]] = []
     for group in user_groups:
         cards: List[Card] = db.query(Card).filter(Card.group_id == group.id).all()
         for cur_card in cards:
@@ -86,7 +86,11 @@ async def find_cards(string: str,
                     continue
                 elif find_on_front[1] <= min_len:
                     min_len = find_on_front[1]
-                res_list.append(cur_card)
+                elif find_on_front[1] > min_len and len(res_list) >= 15:
+                    res_list = sorted(res_list, key=lambda x: x[1])
+                    res_list.pop(0)
+                group_name: Group = db.query(Group).filter(Group.id == cur_card.group_id).first()
+                res_list.append((cur_card, find_on_front[1], group_name.name))
                 continue
 
             find_on_back = find_largest_substring(cur_card.back, string)
@@ -95,7 +99,11 @@ async def find_cards(string: str,
                     continue
                 elif find_on_back[1] <= min_len:
                     min_len = find_on_back[1]
-                res_list.append(cur_card)
+                elif find_on_back[1] > min_len and len(res_list) >= 15:
+                    res_list = sorted(res_list, key=lambda x: x[1])
+                    res_list.pop(0)
+                group_name: Group = db.query(Group).filter(Group.id == cur_card.group_id).first()
+                res_list.append((cur_card, find_on_back[1], group_name.name))
                 continue
 
             find_on_desc = find_largest_substring(cur_card.descriptionText, string)
@@ -104,9 +112,13 @@ async def find_cards(string: str,
                     continue
                 elif find_on_desc[1] <= min_len:
                     min_len = find_on_desc[1]
-                res_list.append(cur_card)
+                elif find_on_desc[1] > min_len and len(res_list) >= 15:
+                    res_list = sorted(res_list, key=lambda x: x[1])
+                    res_list.pop(0)
+                group_name: Group = db.query(Group).filter(Group.id == cur_card.group_id).first()
+                res_list.append((cur_card, find_on_desc[1], group_name.name))
                 continue
-    return res_list
+    return sorted(res_list, key=lambda x: x[1])
 
 
 @router.get("/get_card", response_model=CardShow)

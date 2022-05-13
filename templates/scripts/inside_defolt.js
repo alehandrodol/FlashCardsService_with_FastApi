@@ -34,7 +34,12 @@ async function cardFiller(card_id = -1, modalName){
         let stats = modal_card.getElementsByClassName("card_stats");
         textarea.innerText = response.front.toString();
         textarea2.innerText = response.back;
-        title.innerText = document.getElementById("page_name").innerText
+        if (window.location.href.includes("/cards")){
+            title.innerText = document.getElementById("page_name").innerText
+        }
+        else{
+            title.innerText = (JSON.parse(localStorage.getItem("id_to_name")))[card_id]
+        }
         description.innerText = response.descriptionText;
         stats[0].innerText = `Кол-во успешных повторений: ${response.true_verdicts}`
         stats[1].innerText = `Кол-во повторений: ${response.repeats}`
@@ -66,7 +71,39 @@ async function back_to_groups(){
             localStorage.removeItem("curBackIdCard");
             localStorage.removeItem("curFrontIdCard");
         }
+        if (window.location.href.includes("/search")){
+            localStorage.removeItem("id_to_name");
+        }
         window.history.pushState({},"", "/groups");
         rel();
     }
+}
+
+async function find_cards(searchString){
+    let response = await fetch(`/search?searchString=${searchString}`, {
+        method: "GET"
+    });
+    if (response.status === 200){
+        document.documentElement.innerHTML = (await ((await response).text())).toString()
+        window.history.pushState({},"", `/search?searchString=${searchString}`);
+        rel();
+    }
+}
+
+async function onClickSearch(event){
+    let searchInput = event.target.parentElement.parentElement.getElementsByClassName("search_input")[0];
+    await find_cards(searchInput.value);
+}
+
+function bind_searchBut(){
+    let search_but = document.getElementById("findCardsModal").getElementsByClassName("approve")[0];
+    search_but.onclick = async function(event) {
+        await onClickSearch(event)
+    }
+    document.getElementById("search_input").addEventListener("keypress", function onEvent(event) {
+        if (event.key === "Enter") {
+            event.preventDefault();
+            search_but.click();
+        }
+    });
 }

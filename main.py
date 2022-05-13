@@ -70,6 +70,11 @@ def get_logged(request: Request, group_name: str):
     return templates.TemplateResponse("inside_template.html", {"request": request, "path": "cards", "title": f"{group_name}"})
 
 
+@app.get("/search", response_class=HTMLResponse)
+def get_logged(request: Request, searchString: str):
+    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "search", "title": f"{searchString}"})
+
+
 @app.get("/testing", response_class=HTMLResponse)
 def get_logged(request: Request, group_name: str):
     return templates.TemplateResponse("testing.html", {"request": request, "path": "test", "title": f"{group_name}"})

@@ -3,7 +3,7 @@
     <header>
         <img src="/static/resources/bread.png" id="logo" alt="bread_logo">
         <h1 class="text-truncate" id="page_name">{{ title }}</h1>
-        {% if path|string() == 'cards' %}
+        {% if path|string() == 'cards' or path|string() == 'search' %}
             <button type="button" class="btn-close btn-lg" onclick="back_to_groups()" id="cross_exit"></button>
         {% elif path|string() == 'groups' %}
             <button id="exit" onclick="exit()">Выйти</button>
