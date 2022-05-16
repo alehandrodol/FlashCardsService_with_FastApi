@@ -63,11 +63,16 @@ def binary_search(lys, val):
 
 
 def find_largest_substring(str1: str, str2: str) -> Optional[Tuple[int, int]]:
+    str1 = str1.lower()
+    str2 = str2.lower()
     len_2 = len(str2)
     if len_2 == 0:
         return None
     if len_2 < 3:
-        return str1.index(str2), len_2
+        try:
+            return str1.index(str2), len_2
+        except ValueError:
+            return None
     matrix: List[List[int]] = [[] for x in range(len_2-2)]
     for part_ind in range(len_2-2):
         part = str2[part_ind:part_ind+3]
