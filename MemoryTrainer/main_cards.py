@@ -71,10 +71,13 @@ async def create_card(card: CardCreate,
 
 
 @router.get("/find_by_string")
-async def find_cards(string: str,
+async def find_cards(string: str, search_in: Optional[int] = None,
                      current_user: User = Depends(get_current_user),
                      db: Session = Depends(get_db)) -> List[Tuple[Card, int, str]]:
-    user_groups = db.query(Group).filter(Group.user_id == current_user.id).all()
+    if search_in is not None:
+        user_groups = [db.query(Group).filter(Group.id == search_in).first()]
+    else:
+        user_groups = db.query(Group).filter(Group.user_id == current_user.id).all()
     min_len = float("inf")
     res_list: List[Tuple[Card, int, str]] = []
     for group in user_groups:

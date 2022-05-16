@@ -332,6 +332,7 @@ async function search_data(){
 }
 
 function onload_cards(){
+    localStorage.removeItem("group_name");
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
     let myMod = document.getElementById("myModal");

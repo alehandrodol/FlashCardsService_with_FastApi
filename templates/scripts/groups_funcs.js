@@ -4,6 +4,8 @@ async function main_cards(back_id, group_name){
         });
         if (response.status === 200){
             localStorage.setItem("group_id", `${back_id.toString()}`)
+            let group_num = document.querySelector(`div[data-id="${back_id}"]`).parentElement.getAttribute("id")
+            localStorage.setItem("car_ind", Math.floor((Number(group_num)-1) / 4).toString())
             document.documentElement.innerHTML = (await ((await response).text())).toString()
             window.history.pushState({},"", `/cards?group_name=${group_name}`);
             rel();
@@ -315,8 +317,10 @@ async function createGroup(){
 
 function createCarouselItem(id_start){
     let new_item = document.createElement("div");
-    if (document.getElementsByClassName("carousel-item").length === 0){
+    let active_ind = Number(localStorage.getItem("car_ind"));
+    if (document.getElementsByClassName("carousel-item").length === active_ind){
         new_item.setAttribute("class", "carousel-item active");
+        localStorage.removeItem("car_ind")
     }
     else {
         new_item.setAttribute("class", "carousel-item");
