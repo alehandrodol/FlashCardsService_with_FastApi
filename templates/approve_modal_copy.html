@@ -1,0 +1,16 @@
+<div class="modal fade" id="approveCopyModal" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="approveCopyLabel" aria-hidden="true" style="display: none;" data-create_id={{ copy }}>
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content justify-content-around align-items-center mod-cont-id">
+          <div class="modal-header d-flex justify-content-center mt-3">
+            <h5 class="modal-title fs-3 text-break" id="approveCopyLabel">
+                Вы уверены, что хотите скопировать себе группу:<br>
+                "{{ copy_name }}"?
+            </h5>
+          </div>
+          <div class="modal-footer w-75 d-flex justify-content-between align-items-center mb-5">
+            <button type="button" class="btn me-3 fs-4 but_inside_approve cancel" data-bs-dismiss="modal">Нет</button>
+            <button type="button" class="btn ms-3 fs-4 but_inside_approve approve" data-bs-dismiss="modal">Да</button>
+          </div>
+        </div>
+    </div>
+</div>

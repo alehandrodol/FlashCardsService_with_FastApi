@@ -11,4 +11,5 @@ class Group(Base):
     name = Column(String)
     create_date = Column(DateTime(timezone=True), server_default=sql.func.now())
     user_id = Column(Integer, ForeignKey("users.id"))
+    copy_hash = Column(String, default="")
     user = relationship(User)

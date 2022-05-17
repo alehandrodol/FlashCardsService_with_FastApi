@@ -24,13 +24,14 @@ function check_inputs(){
     let password = document.getElementById("pass_input").value;
     let confirm = document.getElementById("confirm_pass").value;
     let regularExpressionLogin  = /^[a-zA-Z0-9!@#$%^&*_+={}:;`'"?~|<>-]*$/;
-    let regularExpressionPass  = /^(?=.*[0-9])(?=.*[!@#$%^&*_+={}:;`'"?~|<>-])[a-zA-Z0-9!@#$%^&*_+={}:;`'"?~|<>-]*$/;
+    // let regularExpressionPass  = /^(?=.*[0-9])(?=.*[!@#$%^&*_+={}:;`'"?~|<>-])[a-zA-Z0-9!@#$%^&*_+={}:;`'"?~|<>-]*$/;
+    let regularExpressionPass  = /^[a-zA-Z0-9!@#$%^&*_+={}:;`'"?~|<>-]*$/; // simpler pass
     if (login === "" || password === ""){
         return "Empty";
     }
-    if (password.length < 8){
-        return "Pass len"
-    }
+    // if (password.length < 8){
+    //     return "Pass len"
+    // }
     if (!regularExpressionPass.test(password)){
         return "Bad pass"
     }

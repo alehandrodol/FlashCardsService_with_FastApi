@@ -1,9 +1,7 @@
-from typing import Union
+from typing import Union, Optional
 
-import re
-import uvicorn
 from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
-from fastapi.responses import HTMLResponse, RedirectResponse, PlainTextResponse
+from fastapi.responses import HTMLResponse
 from starlette.responses import FileResponse
 from fastapi.security import OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
@@ -14,7 +12,7 @@ from routes import routes
 from sqlalchemy.orm import Session
 
 from User.JWT import ACCESS_TOKEN_EXPIRE_HOURS, create_access_token
-from User.user_manager import authenticate_user, get_current_user
+from User.user_manager import authenticate_user
 from User.schemas import Token
 from User.models import User
 
@@ -61,23 +59,36 @@ def index_page(request: Request):
 
 
 @app.get("/groups", response_class=HTMLResponse)
-def get_logged(request: Request):
-    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "groups", "title": "Список групп"})
+def groups_page(request: Request, create_group: Optional[int] = None, group_hash: Optional[str] = None,
+                db: Session = Depends(get_db)):
+    name = None
+    if create_group is not None:
+        group: Group = db.query(Group).filter(Group.id == create_group).first()
+        if group.copy_hash != "" and group.copy_hash != group_hash:
+            create_group = None
+        else:
+            name = group.name
+    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "groups",
+                                                               "title": "Список групп",
+                                                               "copy": create_group, "copy_name": name})
 
 
 @app.get("/cards", response_class=HTMLResponse)
-def get_logged(request: Request, group_name: str):
-    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "cards", "title": f"{group_name}"})
+def cards_page(request: Request, group_name: str):
+    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "cards",
+                                                               "title": f"{group_name}"})
 
 
 @app.get("/search", response_class=HTMLResponse)
-def get_logged(request: Request, searchString: str):
-    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "search", "title": f"{searchString}"})
+def search_page(request: Request, searchString: str):
+    return templates.TemplateResponse("inside_template.html", {"request": request, "path": "search",
+                                                               "title": f"{searchString}"})
 
 
 @app.get("/testing", response_class=HTMLResponse)
-def get_logged(request: Request, group_name: str):
-    return templates.TemplateResponse("testing.html", {"request": request, "path": "test", "title": f"{group_name}"})
+def testing_page(request: Request, group_name: str):
+    return templates.TemplateResponse("testing.html", {"request": request, "path": "test",
+                                                       "title": f"{group_name}"})
 
 
 @app.post("/token", response_model=Token)

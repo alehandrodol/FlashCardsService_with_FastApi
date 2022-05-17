@@ -40,11 +40,15 @@ async def register(form_data: OAuth2PasswordRequestForm = Depends(), db: Session
         raise HTTPException(status_code=400,
                             detail="Bad login: Use only latin letters or may be you use some exotic symbols")
 
-    # if re.search(r'^(?=.*[0-9])(?=.*[!@#$%^&*_+={}:;`"?~|<>-])[a-zA-Z0-9!@#$%^&*_+={}:;`\'"?~|<>-]*$',
-    #              form_data.password) is None:
-    #     raise HTTPException(status_code=400,
-    #                         detail="Password should contain at least one number and one special character "
-    #                                "(or you use unsupported character)")
+    regular_exp_hard = r'^(?=.*[0-9])(?=.*[!@#$%^&*_+={}:;`"?~|<>-])[a-zA-Z0-9!@#$%^&*_+={}:;`\'"?~|<>-]*$'
+    regular_exp_easy = r'^[a-zA-Z0-9!@#$%^&*_+={}:;`\'"?~|<>-]*$'
+    if re.search(regular_exp_easy,
+                 form_data.password) is None:
+        detail_hard = "Password should contain at least one number and one special character " \
+                      "(or you use unsupported character)"
+        detail_easy = "Seems that you use unsupported characters, try to use another pass"
+        raise HTTPException(status_code=400,
+                            detail=detail_easy)
 
     hashed_pwd = pwd_context.hash(form_data.password)
     db_user = User(

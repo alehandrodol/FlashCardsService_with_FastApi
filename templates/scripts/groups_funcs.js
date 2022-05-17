@@ -60,7 +60,7 @@ function changeFuncs(){
         changed_list = JSON.parse(changed_list);
         for (let i = 0; i < changed_list.length; i++){
             let container = document.getElementById(changed_list[i]["frontId"]);
-            container.firstChild.firstChild.firstChild.firstChild.innerText = changed_list[i]["old_name"];
+            container.firstChild.firstChild.firstChild.firstChild.lastChild.innerText = changed_list[i]["old_name"];
         }
     }
     localStorage.removeItem("changed_list");
@@ -112,7 +112,7 @@ function edit_button_behav(){
     let a = document.getElementsByClassName("card_main");
     for (let i = 0; i < a.length; i++) {
         a[i].onclick = function (event) {
-            let curID = event.target.parentElement.parentElement.parentElement.parentElement.id; // .group_card_container.id from div (.cardMainSpan)
+            let curID = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.id; // .group_card_container.id from div (.cardMainSpan)
             if (curID === ""){
                 curID = event.target.parentElement.parentElement.parentElement.id; // .group_card_container.id from button (.card_main)
             }
@@ -121,11 +121,11 @@ function edit_button_behav(){
 
             let curBackID = "";
             try {
-                curBackID = event.target.parentElement.parentElement.getAttribute("data-id").toString(); // .group_card.data-id from div (.cardMainSpan)
+                curBackID = event.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-id").toString(); // .group_card.data-id from div (.cardMainSpan)
             }
             catch (e) {
                 if (e.name.toString() === "TypeError"){
-                    curBackID = event.target.parentElement.parentElement.parentElement.getAttribute("data-id").toString(); // .group_card.data-id from button (.card_main)
+                    curBackID = event.target.parentElement.parentElement.getAttribute("data-id").toString(); // .group_card.data-id from button (.card_main)
                 }
             }
 
@@ -155,10 +155,21 @@ function edit_button_behav(){
 function changeNameGroup(){
     let text = document.getElementById("new-group-name").value
     let changed_list = JSON.parse(localStorage.getItem("changed_list"));
-    changed_list[changed_list.length - 1]["new_name"] = text;
+    let cur_ind = changed_list.length-1;
+    let front_id = changed_list[cur_ind]["frontId"]
+    for (let i = 0; i < changed_list.length; i++){
+        if (changed_list[i]["frontId"] === front_id){
+            if (cur_ind !== i){
+                cur_ind = i
+                changed_list.pop()
+            }
+            break
+        }
+    }
+    changed_list[cur_ind]["new_name"] = text;
     localStorage.setItem("changed_list", JSON.stringify(changed_list));
-    let curGroup = document.getElementById(`${changed_list[changed_list.length - 1]["frontId"]}`)
-    curGroup.firstChild.firstChild.firstChild.firstChild.innerText = text
+    let curGroup = document.getElementById(`${front_id}`)
+    curGroup.firstChild.firstChild.firstChild.firstChild.lastChild.innerText = text
 }
 
 async function deleteGroup(){
@@ -255,10 +266,27 @@ function createGroupHTML(inside, new_id, data_id){
     butt.setAttribute("class",`card_main ${odd_even}`);
     butt.onclick = function () {main_cards(data_id, inside)}
     butt.setAttribute("data-bs-target", "#changeGroup");
+
+    let div_with_relative = document.createElement("div");
+    div_with_relative.setAttribute("class", "relative_inside_group");
+    let div_with_ico = document.createElement("div");
+    div_with_ico.setAttribute("class", "div_share");
+    div_with_ico.removeEventListener("click", main_cards);
+    div_with_ico.onclick = function (event){
+        event.preventDefault()
+        shareGroup()
+        event.stopPropagation()
+    }
+    let share_ico = document.createElement("i");
+    share_ico.setAttribute("class", "bi bi-box-arrow-up")
+    div_with_ico.append(share_ico)
+    div_with_relative.append(div_with_ico)
+
     let mySpan = document.createElement("div");
     mySpan.setAttribute("class", "cardMainSpan text-break");
     mySpan.innerText = inside;
-    butt.append(mySpan);
+    div_with_relative.append(mySpan);
+    butt.append(div_with_relative);
     object.append(butt);
     new_group_card.append(object)
 
@@ -352,6 +380,10 @@ async function onClickDelete(event) {
     localStorage.setItem("GroupToDelete", old_id);
 }
 
+function shareGroup(){
+    alert("Упс, этот функционал ещё не доделан ;)")
+}
+
 function onload_groups(){
     let btn_edit = document.querySelector('button[id=edit]');
     btn_edit.setAttribute("onclick", "edit_button_behav()")
@@ -383,13 +415,6 @@ function onload_groups(){
         }
     });
 
-    let delete_buts = document.getElementsByClassName("delete_card")
-    for (let i = 0; i < delete_buts.length; i++){
-        delete_buts[i].onclick = async function (event) {
-            await onClickDelete(event);
-        }
-    }
-
     let approve_but = document.getElementById("approveModal").getElementsByClassName("approve")[0];
     approve_but.onclick = async function() {
         await deleteGroup()
@@ -403,6 +428,11 @@ function onload_groups(){
     }
 
     bind_searchBut();
+    let copyModal = document.getElementById("approveCopyModal")
+    if (copyModal !== null){
+        var myModal = bootstrap.Modal.getInstance(copyModal)
+        myModal.toggle()
+    }
 }
 
 async function group_content(){
