@@ -14,8 +14,14 @@ async function login(event) {
     if (response.status === 200){
         let data = await response.json()
         localStorage.setItem('token', data.access_token);
-        window.history.pushState({},"", "/groups");
-        rel();
+        if (localStorage.getItem("group_hash") !== null && localStorage.getItem("group_id") !== null){
+            window.history.pushState({},"", `/groups?create_group=${localStorage.getItem("group_id")}&group_hash=${localStorage.getItem("group_hash")}`);
+            rel();
+        }
+        else {
+            window.history.pushState({},"", "/groups");
+            rel();
+        }
     }
 }
 

@@ -76,6 +76,11 @@ async function onloadTest(){
     }
     let term = document.getElementById("term_of_card");
     term.innerText = front;
+
+    var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+    var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+      return new bootstrap.Tooltip(tooltipTriggerEl)
+})
 }
 
 async function Verdict(verdict){

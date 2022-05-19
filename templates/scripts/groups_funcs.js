@@ -193,10 +193,14 @@ async function deleteGroup(){
     if (items_list[items_list.length-1].getElementsByClassName("group_card").length === 0){
         let car_items = document.getElementsByClassName("carousel-item");
         let last_car_item = car_items[car_items.length-1];
+        let indicators = document.getElementsByClassName("car_ind");
         if (last_car_item.getAttribute("class").toString() === "carousel-item active"){
-            car_items[0].setAttribute("class", "carousel-item active");
+            car_items[car_items.length - 2].setAttribute("class", "carousel-item active");
+            indicators[indicators.length - 2].setAttribute("class", "car_ind active")
         }
         last_car_item.remove()
+        indicators[indicators.length - 1].remove()
+
     }
     for (let i = Math.floor((Number(old_id)-1) / 4) + 1 ; i < items_list.length; i++){
         let next_group = items_list[i].getElementsByClassName("group_card_container")[0]
@@ -271,11 +275,10 @@ function createGroupHTML(inside, new_id, data_id){
     div_with_relative.setAttribute("class", "relative_inside_group");
     let div_with_ico = document.createElement("div");
     div_with_ico.setAttribute("class", "div_share");
-    div_with_ico.removeEventListener("click", main_cards);
-    div_with_ico.onclick = function (event){
-        event.preventDefault()
-        shareGroup()
+    div_with_ico.onclick = async function (event){
         event.stopPropagation()
+        event.preventDefault()
+        await shareGroup(event)
     }
     let share_ico = document.createElement("i");
     share_ico.setAttribute("class", "bi bi-box-arrow-up")
@@ -346,13 +349,29 @@ async function createGroup(){
 function createCarouselItem(id_start){
     let new_item = document.createElement("div");
     let active_ind = Number(localStorage.getItem("car_ind"));
+    let carousel = document.getElementById("innerCar");
+
+    let car_indicator = document.createElement("button")
+    car_indicator.setAttribute("type", "button")
+    car_indicator.setAttribute("data-bs-target", "#carouselWithCards")
+    let slide_num = carousel.getElementsByClassName("carousel-item").length;
+    car_indicator.setAttribute("data-bs-slide-to", slide_num.toString())
+    car_indicator.setAttribute("aria-label", `Slide ${slide_num + 1}`)
+    car_indicator.setAttribute("class", "car_ind")
+
     if (document.getElementsByClassName("carousel-item").length === active_ind){
         new_item.setAttribute("class", "carousel-item active");
+        car_indicator.setAttribute("class", "car_ind active")
+        car_indicator.setAttribute("aria-current", "true")
         localStorage.removeItem("car_ind")
     }
     else {
         new_item.setAttribute("class", "carousel-item");
     }
+
+    let indicators = document.getElementsByClassName("carousel-indicators")[0];
+    indicators.append(car_indicator);
+
     let cards = document.createElement("div")
     cards.setAttribute("class", "groups_cards d-flex");
     for (let i = 0; i < 4; i++){
@@ -362,8 +381,8 @@ function createCarouselItem(id_start){
         cards.append(container);
     }
     new_item.append(cards)
-    let carousel = document.getElementById("innerCar");
     carousel.append(new_item);
+
     return new_item
 }
 
@@ -380,8 +399,49 @@ async function onClickDelete(event) {
     localStorage.setItem("GroupToDelete", old_id);
 }
 
-function shareGroup(){
-    alert("Упс, этот функционал ещё не доделан ;)")
+async function shareGroup(event){
+    let back_id;
+    try {
+        back_id = event.target.parentElement.parentElement.parentElement.parentElement.parentElement.getAttribute("data-id").toString(); // .group_card.data-id from i (.bi bi-box-arrow-up)
+    }
+    catch (e) {
+        if (e.name.toString() === "TypeError"){
+            back_id = event.target.parentElement.parentElement.parentElement.parentElement.getAttribute("data-id").toString(); // .group_card.data-id from div (.div_share)
+        }
+    }
+    let response = await fetch(`/group/make_share_hash?group_id=${back_id}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    });
+    if (response.status === 200) {
+        let data = JSON.parse(await response.json())
+        await navigator.clipboard.writeText(`http://127.0.0.1:8000/groups?create_group=${back_id}&group_hash=${data.share_hash}`)
+    }
+}
+
+async function copy_group_confirm(){
+    let response = await fetch(`/group/copy_group?group_id=${localStorage.getItem("group_id")}&string_confirm=${localStorage.getItem("group_hash")}`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+    });
+    if (response.status === 200){
+        localStorage.removeItem("group_hash")
+        localStorage.removeItem("group_id")
+        window.history.pushState({},"", "/groups");
+        rel();
+    }
+    else if (response.status === 400) {
+        localStorage.removeItem("group_hash")
+        localStorage.removeItem("group_id")
+        window.history.pushState({},"", "/groups");
+        alert("sorry, something went wrong :(")
+    }
 }
 
 function onload_groups(){
@@ -430,7 +490,15 @@ function onload_groups(){
     bind_searchBut();
     let copyModal = document.getElementById("approveCopyModal")
     if (copyModal !== null){
-        var myModal = bootstrap.Modal.getInstance(copyModal)
+        var myModal = new bootstrap.Modal(copyModal)
+        copyModal.getElementsByClassName("approve")[0].onclick = async function () {
+            await copy_group_confirm();
+        }
+        copyModal.getElementsByClassName("cancel")[0].onclick = async function () {
+            localStorage.removeItem("group_hash")
+            localStorage.removeItem("group_id")
+            window.history.pushState({}, "", "/groups");
+        }
         myModal.toggle()
     }
 }
@@ -461,8 +529,25 @@ async function group_content(){
         inner.append(car_item);
         onload_groups();
     }
+    else if (groups_data.status === 401){
+        let go_to_login = await fetch("/", {
+            method: "GET"
+        });
+        if (go_to_login.status === 200){
+            document.documentElement.innerHTML = (await ((await go_to_login).text())).toString()
+            window.history.pushState({},"", "/");
+            rel();
+        }
+    }
 }
 
 document.addEventListener("DOMContentLoaded", async function() {
+    if (document.getElementById("approveCopyModal") !== null){
+        const urlParams = new URLSearchParams(window.location.search);
+        const group_id = urlParams.get('create_group');
+        const group_hash = urlParams.get('group_hash');
+        localStorage.setItem("group_id", group_id);
+        localStorage.setItem("group_hash", group_hash);
+    }
     await group_content();
 });

@@ -69,12 +69,14 @@ async function back_to_groups(){
             localStorage.removeItem("TestEnd");
             localStorage.removeItem("trueVer");
             localStorage.removeItem("falseVer");
+            localStorage.removeItem("group_id");
             document.cookie = "card_dict=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
         }
         if (window.location.href.includes("/cards")){
             localStorage.removeItem("curBackIdCard");
             localStorage.removeItem("curFrontIdCard");
             localStorage.removeItem("group_name");
+            localStorage.removeItem("group_id");
         }
         if (window.location.href.includes("/search")){
             localStorage.removeItem("id_to_name");

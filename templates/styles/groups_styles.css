@@ -438,6 +438,10 @@ main{
     outline-color: rgb(188, 150, 214);
 }
 
+.car_ind {
+    background-color: #351C45 !important;
+}
+
 @media (max-width: 1201px){
     .test_card {
         width: 59px !important;

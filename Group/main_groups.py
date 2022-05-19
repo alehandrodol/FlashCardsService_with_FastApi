@@ -1,5 +1,7 @@
 import re
 
+from secrets import token_hex
+
 from fastapi import APIRouter, Depends, status, HTTPException
 from fastapi.responses import JSONResponse
 
@@ -123,6 +125,58 @@ async def edit_group(group_id: int, new_group: GroupBase,
 
     group: Group = db.query(Group).filter(Group.id == group_id).first()
     group.name = new_group.name
+    add_and_refresh_db(group, db)
+
+    return status.HTTP_200_OK
+
+
+@router.post("/make_share_hash", response_class=JSONResponse)
+async def make_share(group_id: int,
+                     current_user: User = Depends(get_current_user),
+                     db: Session = Depends(get_db)):
+
+    is_group_exist = check_group(group_id=group_id, current_user=current_user, db=db)
+    if not is_group_exist:
+        raise HTTPException(status_code=400, detail="Group with this ID is not exist")
+
+    group: Group = db.query(Group).filter(Group.id == group_id).first()
+    hash = token_hex(nbytes=16)
+    group.copy_hash = hash
+    add_and_refresh_db(group, db)
+
+    return dumps({"status": 200, "share_hash": hash})
+
+
+@router.post("/copy_group")
+async def copy_group(group_id: int, string_confirm: str,
+                     current_user: User = Depends(get_current_user),
+                     db: Session = Depends(get_db)):
+    group: Group = db.query(Group).filter(Group.id == group_id).first()
+    if group is None:
+        raise HTTPException(status_code=400, detail="Group with this ID is not exist")
+
+    # Here I have to make hash from given string
+    if group.copy_hash != string_confirm:
+        raise HTTPException(status_code=400, detail="You don't have access for coping this group")
+
+    new_group: Group = Group(
+        name=group.name,
+        user_id=current_user.id
+    )
+    add_and_refresh_db(new_group, db)
+    new_id = db.query(Group).filter(Group.user_id == current_user.id).order_by(Group.id.desc()).first().id
+
+    cards: List[Card] = get_cards_in_group_service(group_id, db)
+    for card in cards:
+        new_card = Card(
+            front=card.front,
+            back=card.back,
+            descriptionText=card.descriptionText,
+            group_id=new_id
+        )
+        add_and_refresh_db(new_card, db)
+
+    group.copy_hash = ""
     add_and_refresh_db(group, db)
 
     return status.HTTP_200_OK
