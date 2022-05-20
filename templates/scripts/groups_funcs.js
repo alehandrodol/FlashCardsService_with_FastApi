@@ -30,7 +30,7 @@ async function start_test(event){
     })
     let active_cards_list = JSON.parse((await try_resp.text()).toString())
     if (active_cards_list.length === 0){
-        alert("У вас нету карт в данной группе или ни одна из них неактивна")
+        trigger_toast("У вас нету карт в данной группе или ни одна из них неактивна", true)
         return
     }
 
@@ -279,6 +279,7 @@ function createGroupHTML(inside, new_id, data_id){
         event.stopPropagation()
         event.preventDefault()
         await shareGroup(event)
+        trigger_toast("Ссылка скопирована")
     }
     let share_ico = document.createElement("i");
     share_ico.setAttribute("class", "bi bi-box-arrow-up")
@@ -440,7 +441,7 @@ async function copy_group_confirm(){
         localStorage.removeItem("group_hash")
         localStorage.removeItem("group_id")
         window.history.pushState({},"", "/groups");
-        alert("sorry, something went wrong :(")
+        trigger_toast("sorry, something went wrong :(", true)
     }
 }
 
@@ -486,6 +487,13 @@ function onload_groups(){
         let modInputs = myMod.getElementsByClassName("form-control");
         modInputs[0].value = "";
     }
+
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+      return new bootstrap.Toast(toastEl, {
+          delay: 2500
+      })
+    })
 
     bind_searchBut();
     let copyModal = document.getElementById("approveCopyModal")

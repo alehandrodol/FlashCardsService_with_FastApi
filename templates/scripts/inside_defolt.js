@@ -88,6 +88,10 @@ async function back_to_groups(){
 
 async function find_cards(searchString){
     let response;
+    if (searchString.length === 0){
+        trigger_toast("Поле поиска должно быть не пустое");
+        return
+    }
     if (window.location.href.includes("/cards")){
         response = (await fetch(`/cards/find_by_string?string=${searchString}&search_in=${localStorage.getItem("group_id")}`, {
             method: "GET",
@@ -129,6 +133,17 @@ async function find_cards(searchString){
 async function onClickSearch(event){
     let searchInput = event.target.parentElement.parentElement.getElementsByClassName("search_input")[0];
     await find_cards(searchInput.value);
+}
+
+function trigger_toast(message, error= false) {
+    document.getElementsByClassName("toast-body")[0].innerHTML = message;
+    let myToastEl = document.getElementById('plainToast')
+    if (error){
+        myToastEl.style.backgroundColor = "#dc3545";
+        myToastEl.style.color = "#FFFFFF";
+    }
+    let myToast = bootstrap.Toast.getInstance(myToastEl)
+    myToast.show()
 }
 
 function bind_searchBut(){

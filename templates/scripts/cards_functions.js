@@ -267,6 +267,11 @@ async function createNewCard(){
     let back_text = document.getElementById("back-card").value;
     let description = document.getElementById("tipaTextArea").innerText;
 
+    if (front_text.length === 0 || back_text.length === 0){
+        trigger_toast("Вопрос и ответ, должны быть заполненны", true)
+        return
+    }
+
     let response = await fetch("/cards/create_card", {
         method: "POST",
         headers: {
@@ -367,6 +372,13 @@ function onload_cards(){
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
     var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
       return new bootstrap.Tooltip(tooltipTriggerEl)
+    })
+
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+      return new bootstrap.Toast(toastEl, {
+          delay: 2500
+      })
     })
 
     bind_searchBut();

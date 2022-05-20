@@ -1,3 +1,4 @@
+import hashlib
 from typing import Union, Optional
 
 from fastapi import FastAPI, Depends, status, HTTPException, Response, Request
@@ -64,7 +65,8 @@ def groups_page(request: Request, create_group: Optional[int] = None, group_hash
     name = None
     if create_group is not None:
         group: Group = db.query(Group).filter(Group.id == create_group).first()
-        if group.copy_hash != "" and group.copy_hash != group_hash:
+        hashed_string = hashlib.md5(group_hash.encode()).hexdigest()
+        if group.copy_hash != "" and group.copy_hash != hashed_string:
             create_group = None
         else:
             name = group.name

@@ -10,8 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=Montserrat+Alternates&family=Nunito:wght@700&family=Open+Sans&family=Tenor+Sans&display=swap" rel="stylesheet">
 
     <link href="/static/styles/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="/static/scripts/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
 
     <script src="/static/scripts/auth.js"></script>
+    <script src="/static/scripts/inside_defolt.js"></script>
     <link rel="stylesheet" href="/static/styles/styles.css" type="text/css">
 </head>
 <body id="main_body">
@@ -39,7 +41,7 @@
 
         <div class="my-3" id="div_register">Регестрация</div>
 
-        <form method="POST" id="auth_form" action="/token">
+        <form id="auth_form">
             <input type="text" name="username" class="intext mt-2" placeholder=" Login" maxlength="50" id="login_input"/>
             <input type="password" name="password" class="intext mt-2" aria-valuetext="Password" maxlength="50" placeholder=" Password" id="pass_input"/>
             <input type="password" class="intext mt-2" placeholder=" Confirm password" maxlength="50" id="confirm_pass">
@@ -48,11 +50,11 @@
                 <input formaction="/register" type="submit" value="Регистрация" class="formbut" id="register_but" />
                 <button class="formbut" id="pseudo_register">Регистрация</button>
             </div>
-
         </form>
     </main>
     <footer>
         <p>&#169; Alexey Dolgikh 2022</p>
     </footer>
+    {% include 'plain_toast_message.html' %}
 </body>
 </html>

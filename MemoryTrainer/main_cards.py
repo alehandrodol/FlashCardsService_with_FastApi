@@ -78,6 +78,10 @@ async def find_cards(string: str, search_in: Optional[int] = None,
         user_groups = [db.query(Group).filter(Group.id == search_in).first()]
     else:
         user_groups = db.query(Group).filter(Group.user_id == current_user.id).all()
+
+    if len(string) == 0:
+        raise HTTPException(status_code=400, detail="Can't find by zero string")
+
     min_len = float("inf")
     res_list: List[Tuple[Card, int, str]] = []
     for group in user_groups:

@@ -4,12 +4,16 @@ function rel(){
 
 async function login(event) {
     event.preventDefault();
+    if (document.getElementById("login_input").value.length === 0 || document.getElementById("pass_input").value.length === 0){
+        trigger_toast("Заполните логин и пароль!", true)
+        return
+    }
     let response = await fetch("/token", {
         method: "POST",
         body: new FormData(document.querySelector("form"))
     })
     if (response.status === 401){
-        alert("Не правильный логин или пароль!")
+        trigger_toast("Не правильный логин или пароль!", true);
     }
     if (response.status === 200){
         let data = await response.json()
@@ -32,12 +36,12 @@ function check_inputs(){
     let regularExpressionLogin  = /^[a-zA-Z0-9!@#$%^&*_+={}:;`'"?~|<>-]*$/;
     // let regularExpressionPass  = /^(?=.*[0-9])(?=.*[!@#$%^&*_+={}:;`'"?~|<>-])[a-zA-Z0-9!@#$%^&*_+={}:;`'"?~|<>-]*$/;
     let regularExpressionPass  = /^[a-zA-Z0-9!@#$%^&*_+={}:;`'"?~|<>-]*$/; // simpler pass
-    if (login === "" || password === ""){
+    if (login === "" || password === "" || confirm === ""){
         return "Empty";
     }
-    // if (password.length < 8){
-    //     return "Pass len"
-    // }
+    if (password.length < 5){
+        return "Pass len"
+    }
     if (!regularExpressionPass.test(password)){
         return "Bad pass"
     }
@@ -65,7 +69,7 @@ function cancelReg(){
     document.getElementById("div_register").style.display = "none";
     document.getElementById("auth_form").style.height = "36%";
     let intext = document.getElementsByClassName("intext");
-    for (let i = 0; i < intext.length; i++){
+    for (let i = 0; i < intext.length; i++) {
         intext[i].style.height = "22%";
     }
     document.getElementsByClassName("formbuts")[0].style.height = "20%";
@@ -104,41 +108,45 @@ function startRegister(){
 async function registration(){
     let checker = check_inputs();
         if (checker === "Empty"){
-            alert("Inputs must not be empty");
+            trigger_toast("Inputs must not be empty", true);
             return
         }
         else if (checker === "Not same pass"){
-            alert("Пороли не одинаковые")
+            trigger_toast("Пороли не одинаковые", true)
             return
         }
         else if (checker === "Pass len"){
-            alert("Password must be not less than 8 symbols")
+            trigger_toast("Минимальная длина пороля 6 символов", true)
             return
         }
         else if (checker === "Bad pass"){
-            alert("Password should contain at least one number and one special character");
+            trigger_toast("Password should contain at least one number and one special character", true);
             return
         }
         else if (checker === "Bad login"){
-            alert("Bad login: Use only latin letters or may be you use some exotic symbols")
+            trigger_toast("Bad login: Use only latin letters or may be you use some exotic symbols", true)
             return
         }
         let response = await fetch("/user/register", {
             method: "POST",
             body: new FormData(document.querySelector("form"))
         })
-        if (response.status !== 200) {
-            alert(response.statusText)
+        if (response.status === 426){
+            trigger_toast("Данное имя пользователя уже существует", true)
             return;
         }
-        alert("Успешно!");
+        if (response.status !== 200) {
+            trigger_toast(response.statusText, true)
+            return;
+        }
+        trigger_toast("Успешно!");
         document.getElementById("cancel").click();
         let resp_token = await fetch("/token", {
             method: "POST",
             body: new FormData(document.querySelector("form"))
         })
         if (resp_token.status !== 200) {
-            alert(resp_token.statusText);
+            trigger_toast(resp_token.statusText, true);
             return
         }
         let data = await resp_token.json();
@@ -151,7 +159,7 @@ async function registration(){
             body: `{"name" : "Я есть инструкция"}`
         });
         if (group_creation.status !== 200){
-            alert(group_creation.statusText);
+            trigger_toast(group_creation.statusText, true);
             return
         }
         let card_creation = await fetch("/cards/create_card", {
@@ -183,7 +191,7 @@ async function registration(){
             })
         });
         if (card_creation.status !== 200){
-            alert("Произошла ошибка при создании карточки инструкции!")
+            trigger_toast("Произошла ошибка при создании карточки инструкции!", true)
         }
 }
 
@@ -201,6 +209,29 @@ function onload(){
     btn2.onclick = async function (event){
         event.preventDefault()
         await registration();
+    }
+
+    var toastElList = [].slice.call(document.querySelectorAll('.toast'))
+    var toastList = toastElList.map(function (toastEl) {
+      return new bootstrap.Toast(toastEl, {
+          delay: 2500
+      })
+    })
+
+    let intext = document.getElementsByClassName("intext");
+    for (let i = 0; i < intext.length; i++){
+        intext[i].addEventListener("keypress", function onEvent(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                let enter = document.getElementById("enter")
+                if (enter.style.display === "none"){
+                    document.getElementById("register_but").click()
+                }
+                else{
+                    enter.click()
+                }
+            }
+        });
     }
 }
 

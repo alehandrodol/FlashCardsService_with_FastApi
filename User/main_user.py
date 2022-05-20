@@ -28,7 +28,7 @@ async def register(form_data: OAuth2PasswordRequestForm = Depends(), db: Session
     user = get_user(username=form_data.username, db=db)
 
     if user:
-        raise HTTPException(status_code=400, detail="User already exist")
+        raise HTTPException(status_code=426, detail="User already exist")
 
     # if not 8 <= len(form_data.password) <= 50:
     #     raise HTTPException(status_code=400, detail="Password lenght must be not less than 8 and no more than 50")

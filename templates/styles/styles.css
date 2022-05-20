@@ -54,6 +54,16 @@ footer p{
     font-family: 'Open Sans', sans-serif;
 }
 
+.toast {
+    position: fixed;
+    bottom: 3%;
+    right: 4%;
+    padding: 1rem;
+    color: #351C45;
+    background-color: #FFFFFF;
+    font-size: 1rem;
+}
+
 .unselectable {
   -moz-user-select: none;
   -khtml-user-select: none;

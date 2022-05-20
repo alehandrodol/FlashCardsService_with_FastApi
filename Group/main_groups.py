@@ -1,3 +1,4 @@
+import hashlib
 import re
 
 from secrets import token_hex
@@ -140,11 +141,12 @@ async def make_share(group_id: int,
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
 
     group: Group = db.query(Group).filter(Group.id == group_id).first()
-    hash = token_hex(nbytes=16)
-    group.copy_hash = hash
+    string = token_hex(nbytes=16)
+    hashed_string = hashlib.md5(string.encode())
+    group.copy_hash = hashed_string.hexdigest()
     add_and_refresh_db(group, db)
 
-    return dumps({"status": 200, "share_hash": hash})
+    return dumps({"status": 200, "share_hash": string})
 
 
 @router.post("/copy_group")
@@ -155,8 +157,8 @@ async def copy_group(group_id: int, string_confirm: str,
     if group is None:
         raise HTTPException(status_code=400, detail="Group with this ID is not exist")
 
-    # Here I have to make hash from given string
-    if group.copy_hash != string_confirm:
+    hashed_string = hashlib.md5(string_confirm.encode()).hexdigest()
+    if group.copy_hash != hashed_string:
         raise HTTPException(status_code=400, detail="You don't have access for coping this group")
 
     new_group: Group = Group(
