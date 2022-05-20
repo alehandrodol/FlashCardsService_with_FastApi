@@ -38,7 +38,7 @@ async def create_group(group: GroupCreate,
         raise HTTPException(status_code=400, detail="Too long name of group")
 
     if len(group.name) < 1:
-        raise HTTPException(status_code=400, detail="Name of group must be not empty")
+        raise HTTPException(status_code=426, detail="Name of group must be not empty")
 
     if re.search(r'^[\u0400-\u04FFa-zA-Z0-9№\[\]\\/.,! @#$%^&*_+={}:;`\'"?~|<>-]*$', group.name) is None:
         raise HTTPException(status_code=400, detail="You have used unsupported symbol")
@@ -119,7 +119,7 @@ async def edit_group(group_id: int, new_group: GroupBase,
         raise HTTPException(status_code=400, detail="Too long name of group")
 
     if len(new_group.name) < 1:
-        raise HTTPException(status_code=400, detail="Name of group must be not empty")
+        raise HTTPException(status_code=426, detail="Name of group must be not empty")
 
     if re.search(r'^[\u0400-\u04FFa-zA-Z0-9№\[\]\\/.,! @#$%^&*_+={}:;`\'"?~|<>-]*$', new_group.name) is None:
         raise HTTPException(status_code=400, detail="You have used unsupported symbol")

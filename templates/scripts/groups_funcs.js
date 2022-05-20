@@ -96,6 +96,15 @@ async function editButSecond() {
                 },
                 body: JSON.stringify({"name": changed_list[i]["new_name"]})
             })
+            if (response.status === 200) {
+                trigger_toast("Успешно")
+            }
+            else if (response.status === 426){
+                trigger_toast("Название группы не должно быть пустое!", true)
+            }
+            else if (response.status === 400){
+                trigger_toast("Извините, кажется вы использовали какие-то неподдерживаемые символы", true)
+            }
         }
     }
     localStorage.removeItem("changed_list");
@@ -157,6 +166,10 @@ function changeNameGroup(){
     let changed_list = JSON.parse(localStorage.getItem("changed_list"));
     let cur_ind = changed_list.length-1;
     let front_id = changed_list[cur_ind]["frontId"]
+    if (text.length === 0){
+        trigger_toast("Название группы не должно быть пустое!", true)
+        return
+    }
     for (let i = 0; i < changed_list.length; i++){
         if (changed_list[i]["frontId"] === front_id){
             if (cur_ind !== i){
@@ -326,6 +339,10 @@ function createGroupHTML(inside, new_id, data_id){
 
 async function createGroup(){
     let text = document.getElementById("recipient-name").value.toString();
+    if (text.length === 0){
+        trigger_toast("Название группы не должно быть пустое!", true)
+        return
+    }
     let response = await fetch("/group/create_group", {
         method: "POST",
         headers: {
@@ -334,6 +351,10 @@ async function createGroup(){
         },
         body: `{"name" : "${text}"}`
     });
+    if (response.status !== 200){
+        trigger_toast(`Status: ${response.status}, Status text: ${response.statusText}`)
+        return
+    }
     let data = JSON.parse(await response.json())
     let list_cards = document.getElementsByClassName("group_card");    let new_id = list_cards.length + 1;
     let carItem = document.getElementsByClassName("carousel-item");
