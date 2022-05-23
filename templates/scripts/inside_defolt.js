@@ -89,7 +89,7 @@ async function back_to_groups(){
 async function find_cards(searchString){
     let response;
     if (searchString.length === 0){
-        trigger_toast("Поле поиска должно быть не пустое");
+        trigger_toast("Поле поиска должно быть не пустое", true);
         return
     }
     if (window.location.href.includes("/cards")){
@@ -141,6 +141,10 @@ function trigger_toast(message, error= false) {
     if (error){
         myToastEl.style.backgroundColor = "#dc3545";
         myToastEl.style.color = "#FFFFFF";
+    }
+    else {
+        myToastEl.style.backgroundColor = "#FFFFFF";
+        myToastEl.style.color = "#351C45";
     }
     let myToast = bootstrap.Toast.getInstance(myToastEl)
     myToast.show()
