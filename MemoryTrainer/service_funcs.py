@@ -62,17 +62,17 @@ def binary_search(lys, val):
     return index
 
 
-def find_largest_substring(str1: str, str2: str) -> Optional[Tuple[int, int]]:
+def find_largest_substring(str1: str, str2: str) -> Tuple[int, int]:
     str1 = str1.lower()
     str2 = str2.lower()
     len_2 = len(str2)
     if len_2 == 0:
-        return None
+        return -1, -1
     if len_2 < 3:
         try:
             return str1.index(str2), len_2
         except ValueError:
-            return None
+            return -1, -1
     matrix: List[List[int]] = [[] for x in range(len_2-2)]
     for part_ind in range(len_2-2):
         part = str2[part_ind:part_ind+3]
@@ -87,8 +87,13 @@ def find_largest_substring(str1: str, str2: str) -> Optional[Tuple[int, int]]:
 
     max_len = -1
     max_ind = -1
-    for i in range(len(matrix)-1):
+    for i in range(len(matrix)):
         for j in range(len(matrix[i])):
+            if i == len(matrix) - 1:
+                if max_len == -1:
+                    max_len = 3
+                    max_ind = matrix[i][j]
+                break
             cur_len = 3
             cur_list_ind = i
             cur_elem = matrix[i][j]
@@ -105,3 +110,47 @@ def find_largest_substring(str1: str, str2: str) -> Optional[Tuple[int, int]]:
                 max_len = cur_len
                 max_ind = matrix[i][j]
     return max_ind, max_len
+
+
+def bad_character_heuristic(pattern: str) -> Dict[str, int]:
+    res: Dict[str, int] = {}
+    for ind, char in enumerate(pattern):
+        res[char] = ind
+    return res
+
+
+def find_substring(string: str, pattern: str):
+    symbol_ind = bad_character_heuristic(pattern)
+    result = []
+    shift = 0
+
+    while shift <= (len(string) - len(pattern)):
+        curr_ind = len(pattern) - 1
+
+        while curr_ind >= 0 and pattern[curr_ind] == string[shift + curr_ind]:
+            curr_ind -= 1
+
+        if curr_ind == -1:
+            result.append(shift)
+
+            if shift + len(pattern) < len(string):
+                try:
+                    s_i = symbol_ind[string[shift + len(pattern)]]
+                except KeyError:
+                    s_i = 0
+
+                indent = len(pattern) - s_i
+            else:
+                indent = 1
+
+            shift += indent
+
+        else:
+            try:
+                indent = symbol_ind[string[shift + curr_ind]]
+            except KeyError:
+                indent = -1
+
+            shift += max(1, curr_ind - indent)
+
+    return result

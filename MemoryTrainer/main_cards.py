@@ -88,42 +88,21 @@ async def find_cards(string: str, search_in: Optional[int] = None,
         cards: List[Card] = db.query(Card).filter(Card.group_id == group.id).all()
         for cur_card in cards:
             find_on_front = find_largest_substring(cur_card.front, string)
-            if find_on_front != (-1, -1):
-                if find_on_front[1] <= min_len and len(res_list) >= 15:
-                    continue
-                elif find_on_front[1] <= min_len:
-                    min_len = find_on_front[1]
-                elif find_on_front[1] > min_len and len(res_list) >= 15:
-                    res_list = sorted(res_list, key=lambda x: x[1])
-                    res_list.pop(0)
-                group_name: Group = db.query(Group).filter(Group.id == cur_card.group_id).first()
-                res_list.append((cur_card, find_on_front[1], group_name.name))
-                continue
-
             find_on_back = find_largest_substring(cur_card.back, string)
-            if find_on_back != (-1, -1):
-                if find_on_back[1] <= min_len and len(res_list) >= 15:
-                    continue
-                elif find_on_back[1] <= min_len:
-                    min_len = find_on_back[1]
-                elif find_on_back[1] > min_len and len(res_list) >= 15:
-                    res_list = sorted(res_list, key=lambda x: x[1])
-                    res_list.pop(0)
-                group_name: Group = db.query(Group).filter(Group.id == cur_card.group_id).first()
-                res_list.append((cur_card, find_on_back[1], group_name.name))
-                continue
-
             find_on_desc = find_largest_substring(cur_card.descriptionText, string)
-            if find_on_desc != (-1, -1):
-                if find_on_desc[1] <= min_len and len(res_list) >= 15:
+            if find_on_front != (-1, -1) or find_on_back != (-1, -1) or find_on_desc != (-1, -1):
+                cur_max_len = max(find_on_front[1], find_on_back[1], find_on_desc[1])
+                if cur_max_len <= len(string) // 2:
                     continue
-                elif find_on_desc[1] <= min_len:
-                    min_len = find_on_desc[1]
-                elif find_on_desc[1] > min_len and len(res_list) >= 15:
+                if cur_max_len <= min_len and len(res_list) >= 15:
+                    continue
+                elif cur_max_len <= min_len:
+                    min_len = cur_max_len
+                elif cur_max_len > min_len and len(res_list) >= 15:
                     res_list = sorted(res_list, key=lambda x: x[1])
                     res_list.pop(0)
                 group_name: Group = db.query(Group).filter(Group.id == cur_card.group_id).first()
-                res_list.append((cur_card, find_on_desc[1], group_name.name))
+                res_list.append((cur_card, cur_max_len, group_name.name))
                 continue
     return sorted(res_list, key=lambda x: x[1])
 
